@@ -11,7 +11,7 @@ package opendfa.DFA;
  */
 public abstract class DFAModel {
 
-    private DFA dfa;
+    protected DFA dfa;
 
     public DFAModel() {
         GenerateDFA();
@@ -131,4 +131,6 @@ public abstract class DFAModel {
     public boolean Scan(String line) {
         return dfa.scan(line);
     }
+    
+
 }

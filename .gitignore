@@ -10,7 +10,8 @@ nbactions.xml
 nb-configuration.xml
 nbproject/
 
-Temp/*
+Temp/*.dot
+Temp/*.png
 Output/*
 
 # Class Files #

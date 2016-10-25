@@ -1,15 +1,12 @@
 //Ultima versione pdf: http://informatica.i-learn.unito.it/file.php/1001/esercizi_24_11_2014.pdf
 package opendfa.DFA;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -43,19 +40,18 @@ public class DFA {
     /**
      * The dir. where temporary files will be created.
      */
-    private static String OUTPUT_DIR = configFile.getProperty("outputDir");
+    private static final String OUTPUT_DIR = configFile.getProperty("outputDir");
 
     /**
      * The dir. where temporary files will be created.
      */
-    private static String TEMP_DIR = configFile.getProperty("tempDir");
+    private static final String TEMP_DIR = configFile.getProperty("tempDir");
 
     /**
      * Where is your dot program located? It will be called externally.
      */
-    private static String DOT = configFile.getProperty("dotFor" + osName);
+    private static final String DOT = configFile.getProperty("dotFor" + osName);
 
-    
     /**
      * The image size in dpi. 96 dpi is normal size. Higher values are 10%
      * higher each. Lower values 10% lower each.
@@ -68,8 +64,8 @@ public class DFA {
      * Define the index in the image size array.
      */
     private int currentDpiPos = 7;
-    
-        /**
+
+    /**
      * Increase the image size (dpi).
      */
     public void increaseDpi() {
@@ -90,7 +86,7 @@ public class DFA {
     public int getImageDpi() {
         return this.dpiSizes[this.currentDpiPos];
     }
-    
+
     /**
      * Numero degli stati dell'automa. Ogni stato e` rappresentato da un numero
      * interno non negativo, lo stato con indice 0 e` lo stato iniziale.
@@ -115,8 +111,8 @@ public class DFA {
      */
     public DFA(int n) {
         numberOfStates = n;
-        finalStates = new HashSet<Integer>();
-        transitions = new HashMap<Move, Integer>();
+        finalStates = new HashSet<>();
+        transitions = new HashMap<>();
     }
 
     /**
@@ -370,9 +366,9 @@ public class DFA {
     public void toPNG(String Name, String OutputDir) {
         try {
             this.toDOTAlternative(Name, TEMP_DIR);
-            String dotFIleUrl = TEMP_DIR + Name +".dot";
+            String dotFIleUrl = TEMP_DIR + Name + ".dot";
             Runtime rt = Runtime.getRuntime();
-            String[] args = {DOT, "-Tpng", "-Gdpi=" + dpiSizes[this.currentDpiPos], dotFIleUrl, "-o" , OutputDir+Name+".png"};
+            String[] args = {DOT, "-Tpng", "-Gdpi=" + dpiSizes[this.currentDpiPos], dotFIleUrl, "-o", OutputDir + Name + ".png"};
             Process p = rt.exec(args);
             p.waitFor();
         } catch (IOException ex) {
@@ -636,6 +632,14 @@ public class DFA {
         DFA minimize2 = dfa.minimize();
 
         return (minimize.numberOfStates == minimize2.numberOfStates && minimize.finalStates.equals(minimize2.finalStates) && minimize.transitions.equals(minimize2.transitions));
+    }
+
+    public Integer[] getFinalState() {
+        return (Integer[]) finalStates.toArray();
+    }
+
+    public String[] getEdgeStringify() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

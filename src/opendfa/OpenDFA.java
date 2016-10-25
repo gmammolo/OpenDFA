@@ -5,22 +5,113 @@
  */
 package opendfa;
 
-import opendfa.GraphViz.GraphGUI;
+import opendfa.DFA.DFAModel;
+import opendfa.DFA.Gen;
 
 /**
  *
  * @author terasud
  */
-public class OpenDFA {
+public class OpenDFA extends DFAModel{
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
-        //String dotFormat = "1->2;1->3;1->4;4->5;4->6;6->7;5->7;3->8;3->6;8->7;2->8;2->5;";
-        //createDotGraph(dotFormat, "DotGraph");
-        new GraphGUI().createPngGraph(null, null);
+    private int numstate;
+        
+    @Override
+    protected void InitializeDFA() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    protected int NumState() {
+        return this.numstate;
+    }
+    
+    public OpenDFA() {
+        numstate=0;
+    }
+    
+    protected Boolean checkState(Integer newState) {
+         if(newState<-1) {
+            throw new IllegalArgumentException("Non possono esistere stati negativi");
+        }
+         if(newState > this.NumState()) {
+             this.numstate = newState;
+         } 
+         return true;
+    }
+
+
+    @Override
+    protected void SetMove(Integer p, Gen g, Integer q)
+    {
+        checkState(p);
+        checkState(q);
+        super.SetMove(p, g, q);
+    }
+    
+    
+    
+    /**
+     * Imposta una move da uno stato p ad uno stato q dovuta a un carattere ch
+     * @param p stato iniziale  
+     * @param ch carattere  
+     * @param q stato finale
+     */
+    @Override
+    protected void SetMove(Integer p, char ch, Integer q)
+    {
+        checkState(p);
+        checkState(q);
+        super.SetMove(p, ch, q);
+    }
+    
+    /**
+     * Imposta una move da uno stato p ad uno stato q per  un range di valori
+     * @param p stato iniziale
+     * @param start inizio del range di valori
+     * @param end fine del range di valori
+     * @param q stato finale
+     */
+    @Override
+    protected void SetMove(Integer p, char start, char end, Integer q)
+    {
+        checkState(p);
+        checkState(q);
+        super.SetMove(p, start,end, q);
+    }
+        
+    /**
+     * 
+     * @param p stato iniziale 
+     * @param ch array di char contente la serie di caratteri che permettono il movimento
+     * @param q stato finale
+     */
+    @Override
+    protected void SetMove(Integer p, char[] ch, Integer q)
+    {
+        for(Character a :ch) 
+        {
+            SetMove(p, a, q);
+        }
+    }
+    
+    /**
+     * Aggiunge un nuovo stato finale al DFA
+     * @param p stato finale
+     */
+    @Override
+    protected void AddFinalState(Integer p)
+    {
+        checkState(p);
+        super.AddFinalState(p);
+    }
+    
+    
+    public Integer[] getFinalState() {
+      return this.dfa.getFinalState();  
+    }
+    
+    public String[] getEdge() {
+        return this.dfa.getEdgeStringify();
+    } 
 }
