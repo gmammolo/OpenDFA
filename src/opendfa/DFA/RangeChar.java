@@ -5,42 +5,127 @@
  */
 package opendfa.DFA;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Giuseppe
  */
 public class RangeChar {
-    public char start;
-    public char end;
-    public char val[];
-    
-    public RangeChar(char[] val)
-    {
-        this.val = val;
+
+    protected ArrayList<Character> charList;
+
+    public RangeChar(char[] val) {
+        RangeChar.this.addChar(val);
+
     }
+
+    public RangeChar(ArrayList<Character> val) {
+        RangeChar.this.addChar(val);
+
+    }
+
     public RangeChar(char start, char end) {
-        this.start = start;
-        this.end = end;
-        val= new char[0];
+        addChar(start, end);
     }
-    
-    public static RangeChar getDigits() {
+
+    /**
+     * Aggiunge un set di caratteri
+     *
+     * @param ch
+     */
+    public void addChar(char[] ch) {
+        this.charList = new ArrayList<>();
+        for (char c : charList) {
+            if (!this.charList.contains(c)) {
+                this.charList.add(c);
+            }
+        }
+    }
+
+    public void addChar(ArrayList<Character> ch) {
+        this.charList = new ArrayList<>();
+        for (char c : charList) {
+            if (!this.charList.contains(c)) {
+                this.charList.add(c);
+            }
+        }
+    }
+
+    public void addChar(char start, char end) {
+        while (start <= end) {
+            if (!this.charList.contains(start)) {
+                this.charList.add(start);
+            }
+            start++;
+        }
+
+    }
+
+    /**
+     * Restituisce la lista dei caratteri
+     *
+     * @return
+     */
+    public ArrayList<Character> getCharacters() {
+        return charList;
+    }
+
+    /**
+     * Restituisce [0-9]
+     *
+     * @return
+     */
+    public static RangeChar GetDigits() {
         return new RangeChar('0', '9');
     }
-    
-    public static RangeChar getPlusMinus()
-    {
+
+    /**
+     * restituisce [+-]
+     *
+     * @return
+     */
+    public static RangeChar GetPlusMinus() {
         return new RangeChar(new char[]{'+', '-'});
     }
-    
-    public static RangeChar getAlphabetUppercase() 
-    {
-        return new RangeChar('A','Z');
+
+    /**
+     * restituisce [A-Z]
+     *
+     * @return
+     */
+    public static RangeChar GetAlphabetUppercase() {
+        return new RangeChar('A', 'Z');
     }
-    
-        public static RangeChar getAlphabetLovercase() 
-    {
-        return new RangeChar('a','z');
+
+    /**
+     * restituisce [a-z]
+     *
+     * @return
+     */
+    public static RangeChar GetAlphabetLovercase() {
+        return new RangeChar('a', 'z');
     }
-            
+
+    /**
+     * restituisce [A-Za-z]
+     *
+     * @return
+     */
+    public static RangeChar GetAlphabet() {
+        RangeChar result = new RangeChar('a', 'z');
+        result.addChar('A', 'Z');
+        return result;
+    }
+
+    /**
+     * restituisce [a-zA-Z0-9]
+     * @return 
+     */
+    public static RangeChar GetFullAlphabet() {
+        RangeChar result = new RangeChar('a', 'z');
+        result.addChar('A', 'Z');
+        result.addChar('0', '9');
+        return result;
+    }
 }

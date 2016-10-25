@@ -5,6 +5,7 @@
  */
 package opendfa;
 
+import java.util.ArrayList;
 import opendfa.DFA.DFA;
 import opendfa.DFA.RangeChar;
 
@@ -43,7 +44,7 @@ public abstract class DFAModel {
 
     /**
      * Imposta una Move da uno stato p ad uno stato q dovuta a un carattere
- speciale
+     * speciale
      *
      * @see <code>RangeChar</code> per maggiori informazioni
      * @param p stato iniziale
@@ -51,11 +52,7 @@ public abstract class DFAModel {
      * @param q stato finale
      */
     protected void SetMove(Integer p, RangeChar g, Integer q) {
-        if (g.val.length > 0) {
-            SetMove(p, g.val, q);
-        } else {
-            SetMove(p, g.start, g.end, q);
-        }
+        dfa.SetMove(p, g.getCharacters(), q);
     }
 
     /**
@@ -95,9 +92,21 @@ public abstract class DFAModel {
      * <code>protected void SetMove(Integer p, RangeChar g, Integer q)</code>
      */
     protected void SetMove(Integer p, char[] ch, Integer q) {
-        for (Character a : ch) {
-            SetMove(p, a, q);
-        }
+        dfa.SetMove(p, ch, q);
+    }
+
+    /**
+     *
+     * @param p stato iniziale
+     * @param ch array di char contente la serie di caratteri che permettono il
+     * movimento
+     * @param q stato finale
+     * @deprecated
+     * @see
+     * <code>protected void SetMove(Integer p, RangeChar g, Integer q)</code>
+     */
+    protected void SetMove(Integer p, ArrayList<Character> ch, Integer q) {
+        dfa.SetMove(p, ch, q);
     }
 
     /**

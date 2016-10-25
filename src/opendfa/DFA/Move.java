@@ -31,7 +31,7 @@ public class Move {
         for (char c : ch) {
             this.alphabet.add(c);
         }
-        regenerateLabel();
+        _regenerateLabel();
     }
 
     /**
@@ -43,7 +43,7 @@ public class Move {
     public Move(int start, ArrayList<Character> ch) {
         this.start = start;
         this.alphabet = ch;
-        regenerateLabel();
+        _regenerateLabel();
     }
 
     /**
@@ -56,7 +56,7 @@ public class Move {
         this.start = start;
         this.alphabet = new ArrayList<>();
         this.alphabet.add(ch);
-        regenerateLabel();
+        _regenerateLabel();
     }
 
     /**
@@ -77,26 +77,72 @@ public class Move {
         }
     }
 
-    public void AddAlphabet(char c) {
+    /**
+     * Aggiunge caratteri all' arco
+     *
+     * @param ch
+     */
+    public void addAlphabet(char c) {
         this.alphabet.add(c);
-        regenerateLabel();
+        _regenerateLabel();
     }
 
-    public void AddAlphabet(char[] ch) {
+    /**
+     * Aggiunge caratteri all' arco
+     *
+     * @param ch
+     */
+    public void addAlphabet(char[] ch) {
         for (char c : ch) {
             this.alphabet.add(c);
         }
-        regenerateLabel();
+        _regenerateLabel();
     }
 
-    public void AddAlphabet(ArrayList<Character> ch) {
+    /**
+     * Aggiunge caratteri all' arco
+     *
+     * @param ch
+     */
+    public void addAlphabet(ArrayList<Character> ch) {
         this.alphabet.addAll(ch);
-        regenerateLabel();
+        _regenerateLabel();
     }
 
-    private void regenerateLabel() {
+    /**
+     * genera il label da visualizzare in modo stringato
+     */
+    private void _regenerateLabel() {
         //TODO: da abbellire
-        this.label = this.alphabet.toString();
+        //this.label = this.alphabet.toString();
+        label = "";
+        if (this.alphabet.size() <= 0) {
+            return;
+        } else if (alphabet.size() == 1) {
+            label += alphabet.get(0);
+            return;
+        }
+
+        int size = this.alphabet.size()-1;
+        int i;
+        for (i = 0; i < size; i++) {
+            if (alphabet.get(i) == alphabet.get(i + 1) - 1) {
+                label += this.alphabet.get(i);
+                label += "-";
+                while (i < size  && alphabet.get(i) == alphabet.get(i + 1) - 1) {
+                    i++;
+                }
+                if (i != size) {
+                    label += alphabet.get(i)+", ";
+                }
+            } else {
+                label += alphabet.get(i) + ", ";
+            }
+
+        }
+        if (i >= size ) {
+            label += alphabet.get(size );
+        }
     }
 
 }

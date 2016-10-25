@@ -99,15 +99,13 @@ public class DFA {
     /**
      * Insieme degli stati finali dell'automa.
      */
-    @SuppressWarnings("FieldMayBeFinal")
-    private HashSet<Integer> finalStates;
+    private final HashSet<Integer> finalStates;
 
     /**
      * Funzione di transizione dell'automa, rappresentata come una mappa da
      * mosse a stati di arrivo.
      */
-    @SuppressWarnings("FieldMayBeFinal")
-    private HashMap<Move, Integer> edges;
+    private final HashMap<Move, Integer> transitions;
 
     /**
      * Crea un DFA con un dato numero di stati.
@@ -117,7 +115,7 @@ public class DFA {
     public DFA(int n) {
         numberOfStates = n;
         finalStates = new HashSet<>();
-        edges = new HashMap<>();
+        transitions = new HashMap<>();
     }
 
     /**
@@ -210,17 +208,17 @@ public class DFA {
             return false;
         }
         Move found = null;
-        for (Move m : edges.keySet()) {
-            if (m.start == p && edges.get(m)==q ) {
+        for (Move m : transitions.keySet()) {
+            if (m.start == p && transitions.get(m)==q ) {
                 found = m;
             }
         }
         if (found == null) {
-            edges.put(new Move(p, ch), q);
+            transitions.put(new Move(p, ch), q);
         } else {
-            edges.remove(found);
-            found.AddAlphabet(ch);
-            edges.put(found, q);
+            transitions.remove(found);
+            found.addAlphabet(ch);
+            transitions.put(found, q);
         }
         return true;
     }
@@ -276,7 +274,7 @@ public class DFA {
 
     public HashSet<Integer> GetAllState() {
         HashSet<Integer> result = new HashSet<>();
-        for (Entry<Move, Integer> entry : edges.entrySet()) {
+        for (Entry<Move, Integer> entry : transitions.entrySet()) {
             result.add(entry.getKey().start);
             result.add(entry.getValue());
         }
@@ -292,7 +290,7 @@ public class DFA {
      */
     public HashSet<Character> GetAlphabet() {
         HashSet<Character> alphabet = new HashSet<Character>();
-        for (Entry<Move, Integer> entry : edges.entrySet()) {
+        for (Entry<Move, Integer> entry : transitions.entrySet()) {
             for (Character ch : entry.getKey().alphabet) {
                 alphabet.add(ch);
             }
@@ -311,8 +309,8 @@ public class DFA {
      */
     public int Move(int p, char ch) {
         Move move = new Move(p, ch);
-        if (edges.containsKey(move)) {
-            return edges.get(move);
+        if (transitions.containsKey(move)) {
+            return transitions.get(move);
         } else {
             return -1;
         }
@@ -329,8 +327,8 @@ public class DFA {
      */
     public int Move(int p, char[] ch) {
         Move move = new Move(p, ch);
-        if (edges.containsKey(move)) {
-            return edges.get(move);
+        if (transitions.containsKey(move)) {
+            return transitions.get(move);
         } else {
             return -1;
         }
@@ -347,8 +345,8 @@ public class DFA {
      */
     public int Move(int p, ArrayList<Character> ch) {
         Move move = new Move(p, ch);
-        if (edges.containsKey(move)) {
-            return edges.get(move);
+        if (transitions.containsKey(move)) {
+            return transitions.get(move);
         } else {
             return -1;
         }
@@ -402,8 +400,8 @@ public class DFA {
 
         }
         out += "node [shape = circle];\n";
-        for (Move m : edges.keySet()) {
-            out += "q" + m.start + " -> q" + edges.get(m) + " [ label = \"" + m.label + "\" ];\n";
+        for (Move m : transitions.keySet()) {
+            out += "q" + m.start + " -> q" + transitions.get(m) + " [ label = \"" + m.label + "\" ];\n";
         }
         out += "}";
         System.out.println(out);
@@ -468,7 +466,7 @@ public class DFA {
         ArrayList<Move> entries = orderByInitialState();
         Integer OldState = -1;
         for (Move move : entries) {
-            Integer end = edges.get(move);
+            Integer end = transitions.get(move);
             if (move.start != OldState) {
                 if (OldState != -1) {
                     s += "\t\t\t\t else \n\t\t\t\t\t state = -1; \n\t\t\t break; \n";
@@ -510,7 +508,7 @@ public class DFA {
     }
 
     private ArrayList<Move> orderByInitialState() {
-        ArrayList<Move> result = new ArrayList<>(edges.keySet());
+        ArrayList<Move> result = new ArrayList<>(transitions.keySet());
         Collections.sort(result, new Comparator<Move>() {
             @Override
             public int compare(Move item1, Move item2) {
@@ -535,7 +533,7 @@ public class DFA {
         while (check) {
             check = false;
             for (int i = 0; i < numberOfStates; i++) {
-                for (Entry<Move, Integer> entry : edges.entrySet()) {
+                for (Entry<Move, Integer> entry : transitions.entrySet()) {
                     Move key = entry.getKey();
                     Integer value = entry.getValue();
 
@@ -602,7 +600,7 @@ public class DFA {
         while (check) {
             check = false;
             for (int i = 0; i < numberOfStates; i++) {
-                for (Entry<Move, Integer> entry : edges.entrySet()) {
+                for (Entry<Move, Integer> entry : transitions.entrySet()) {
                     Move key = entry.getKey();
                     Integer value = entry.getValue();
 
@@ -646,7 +644,7 @@ public class DFA {
             for (int i = 0; i < numberOfStates; i++) {
                 for (int j = 0; j < numberOfStates; j++) {
                     if (eq[i][j]) {
-                        for (Entry<Move, Integer> entry : edges.entrySet()) {
+                        for (Entry<Move, Integer> entry : transitions.entrySet()) {
                             Move key = entry.getKey();
                             //Integer value = entry.getValue();
                             if (ValidState(Move(i, key.alphabet)) && ValidState(Move(i, key.alphabet)) && Move(i, key.alphabet) >= 0 && Move(j, key.alphabet) >= 0 && !eq[Move(i, key.alphabet)][Move(j, key.alphabet)]) {
@@ -682,7 +680,7 @@ public class DFA {
         }
         HashSet<Integer> sink = sink();
         DFA B = new DFA(k + 1);
-        for (Entry<Move, Integer> entry : edges.entrySet()) {
+        for (Entry<Move, Integer> entry : transitions.entrySet()) {
             Move key = entry.getKey();
             Integer value = entry.getValue();
             if (m[key.start] != null && m[value] != null && !sink.contains(m[value])) {
@@ -700,7 +698,7 @@ public class DFA {
         DFA minimize = this.minimize();
         DFA minimize2 = dfa.minimize();
 
-        return (minimize.numberOfStates == minimize2.numberOfStates && minimize.finalStates.equals(minimize2.finalStates) && minimize.edges.equals(minimize2.edges));
+        return (minimize.numberOfStates == minimize2.numberOfStates && minimize.finalStates.equals(minimize2.finalStates) && minimize.transitions.equals(minimize2.transitions));
     }
 
     public Integer[] getFinalState() {

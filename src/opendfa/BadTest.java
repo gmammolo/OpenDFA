@@ -20,10 +20,13 @@ public class BadTest extends DFAModel{
         SetMove(0, '0', 1);
         
         SetMove(1, '1', 0);
+         SetMove(1, 'a', 0);
         SetMove(1, '0', 2);
         
         SetMove(2, '1', 0);
-        SetMove(2, '0', 3);
+        SetMove(2, '0', '9', 3);
+        SetMove(2, 'c', 'e', 3);
+        
         
         SetMove(3, new char[]{'0','1'}, 3);
         
