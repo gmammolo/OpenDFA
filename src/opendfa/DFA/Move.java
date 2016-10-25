@@ -71,7 +71,7 @@ public class Move {
     public boolean equals(Object o) {
         if (o instanceof Move) {
             Move m = (Move) o;
-            return start == m.start && alphabet.contains(m.alphabet);
+            return start == m.start && ( alphabet.equals(m.alphabet) ||  alphabet.contains(m.alphabet) );
         } else {
             return false;
         }
@@ -113,8 +113,6 @@ public class Move {
      * genera il label da visualizzare in modo stringato
      */
     private void _regenerateLabel() {
-        //TODO: da abbellire
-        //this.label = this.alphabet.toString();
         label = "";
         if (this.alphabet.size() <= 0) {
             return;
