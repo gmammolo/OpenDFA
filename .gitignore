@@ -8,6 +8,10 @@ dist/
 nbdist/
 nbactions.xml
 nb-configuration.xml
+nbproject/
+
+Temp/*
+Output/*
 
 # Class Files #
 *.class
@@ -19,5 +23,4 @@ nb-configuration.xml
 
 # Config File #
 *.xml
-*.properties
 *.mf

@@ -1,13 +1,17 @@
 //Ultima versione pdf: http://informatica.i-learn.unito.it/file.php/1001/esercizi_24_11_2014.pdf
 package opendfa.DFA;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,6 +21,76 @@ import java.util.logging.Logger;
  */
 public class DFA {
 
+    /**
+     * Detects the client's operating system.
+     */
+    private final static String osName = System.getProperty("os.name").replaceAll("\\s", "");
+    /**
+     * Load the config.properties file.
+     */
+    private final static String cfgProp = "/home/terasud/NetBeansProjects/OpenDFA/config/config.properties";
+    private final static Properties configFile = new Properties() {
+        private final static long serialVersionUID = 1L;
+
+        {
+            try {
+                load(new FileInputStream(cfgProp));
+            } catch (Exception e) {
+            }
+        }
+    };
+
+    /**
+     * The dir. where temporary files will be created.
+     */
+    private static String OUTPUT_DIR = configFile.getProperty("outputDir");
+
+    /**
+     * The dir. where temporary files will be created.
+     */
+    private static String TEMP_DIR = configFile.getProperty("tempDir");
+
+    /**
+     * Where is your dot program located? It will be called externally.
+     */
+    private static String DOT = configFile.getProperty("dotFor" + osName);
+
+    
+    /**
+     * The image size in dpi. 96 dpi is normal size. Higher values are 10%
+     * higher each. Lower values 10% lower each.
+     *
+     * dpi patch by Peter Mueller
+     */
+    private int[] dpiSizes = {46, 51, 57, 63, 70, 78, 86, 96, 106, 116, 128, 141, 155, 170, 187, 206, 226, 249};
+
+    /**
+     * Define the index in the image size array.
+     */
+    private int currentDpiPos = 7;
+    
+        /**
+     * Increase the image size (dpi).
+     */
+    public void increaseDpi() {
+        if (this.currentDpiPos < (this.dpiSizes.length - 1)) {
+            ++this.currentDpiPos;
+        }
+    }
+
+    /**
+     * Decrease the image size (dpi).
+     */
+    public void decreaseDpi() {
+        if (this.currentDpiPos > 0) {
+            --this.currentDpiPos;
+        }
+    }
+
+    public int getImageDpi() {
+        return this.dpiSizes[this.currentDpiPos];
+    }
+    
     /**
      * Numero degli stati dell'automa. Ogni stato e` rappresentato da un numero
      * interno non negativo, lo stato con indice 0 e` lo stato iniziale.
@@ -81,7 +155,9 @@ public class DFA {
      */
     public boolean setMove(int p, char start, char end, int q) {
         boolean check = true;
-        if(start > end) throw new IllegalArgumentException("start non può essere minore di end");
+        if (start > end) {
+            throw new IllegalArgumentException("start non può essere minore di end");
+        }
         char ch = start;
         while (ch <= end) {
             check = setMove(p, ch++, q);
@@ -225,18 +301,27 @@ public class DFA {
      * @param name Nome dell'automa.
      */
     public void toDOT(String name) {
+        this.toDOT(name, OUTPUT_DIR);
+    }
+
+    /**
+     * Stampa una rappresentazione testuale dell'automa da visualizzare con
+     * <a href="http://www.graphviz.org">GraphViz</a>.
+     *
+     * @param name Nome dell'automa.
+     */
+    public void toDOT(String name, String OutputDir) {
 // DA IMPLEMENTARE 2.5
         String out = "digraph " + name + "{\n";
         out += "rankdir=LR;\n";
         out += "node [shape = doublecircle];\n";
         for (Integer i : finalStates) {
-            if(i == -1) {
+            if (i == -1) {
                 out += "qe;\n";
-            }
-            else {
+            } else {
                 out += "q" + i + ";\n";
             }
-            
+
         }
         out += "node [shape = circle];\n";
         for (Move m : transitions.keySet()) {
@@ -244,9 +329,14 @@ public class DFA {
         }
         out += "}";
         System.out.println(out);
+        this.writeToFile(OutputDir + name + ".dot", out);
     }
 
     public void toDOTAlternative(String name) {
+        this.toDOTAlternative(name, OUTPUT_DIR);
+    }
+
+    public void toDOTAlternative(String name, String OutputDir) {
         // DA IMPLEMENTARE
         String text = "digraph " + name + " {\n"
                 + "rankdir=LR;\n"
@@ -268,7 +358,38 @@ public class DFA {
         text += arr_tmp.toDot();
         text += "\n}";
         System.out.println(text);
+        this.writeToFile(OutputDir + name + ".dot", text);
 
+    }
+
+    public void toPNG(String Name) {
+        this.toPNG(Name, OUTPUT_DIR);
+
+    }
+
+    public void toPNG(String Name, String OutputDir) {
+        try {
+            this.toDOTAlternative(Name, TEMP_DIR);
+            String dotFIleUrl = TEMP_DIR + Name +".dot";
+            Runtime rt = Runtime.getRuntime();
+            String[] args = {DOT, "-Tpng", "-Gdpi=" + dpiSizes[this.currentDpiPos], dotFIleUrl, "-o" , OutputDir+Name+".png"};
+            Process p = rt.exec(args);
+            p.waitFor();
+        } catch (IOException ex) {
+            Logger.getLogger(DFA.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(DFA.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void writeToFile(String filename, String context) {
+        try {
+            PrintWriter out = new PrintWriter(filename);
+            out.println(context);
+            out.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(DFA.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private Support_Transitions GenerateSupport() {
@@ -290,6 +411,16 @@ public class DFA {
      * @param name Nome della classe da generare.
      */
     public void toJava(String name) {
+        this.toJava(name, OUTPUT_DIR);
+    }
+
+    /**
+     * Stampa una classe Java con un metodo <code>scan</code> che implementa
+     * l'automa.
+     *
+     * @param name Nome della classe da generare.
+     */
+    public void toJava(String name, String OutputDir) {
         String s = "public class " + name + " {\n"
                 + "\tpublic static boolean scan(String s)\n"
                 + "\t{\n"
@@ -316,7 +447,7 @@ public class DFA {
                 + "}\n";
 
         System.out.println(s);
-
+        this.writeToFile(OutputDir + name + "_code.java", s);
     }
 
     /**

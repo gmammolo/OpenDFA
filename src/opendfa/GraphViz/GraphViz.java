@@ -81,7 +81,7 @@ public class GraphViz
     /**
      * Load the config.properties file.
      */
-    private final static String cfgProp = "/home/terasud/NetBeansProjects/LFT/nbproject/config.properties";
+    private final static String cfgProp = "/home/terasud/NetBeansProjects/OpenDFA/config/config.properties";
     private final static Properties configFile = new Properties() {
         private final static long serialVersionUID = 1L; {
             try {
@@ -93,12 +93,12 @@ public class GraphViz
     /**
      * The dir. where temporary files will be created.
      */
-  private static String TEMP_DIR = "/home/terasud/NetBeansProjects/LFT/build/tmp/";
+  private static String TEMP_DIR =configFile.getProperty("tempDir"); 
 
     /**
      * Where is your dot program located? It will be called externally.
      */
-  private static String DOT ="dot" ;  //configFile.getProperty("dotFor" + osName);
+  private static String DOT =configFile.getProperty("dotFor" + osName);
 
     /**
      * The image size in dpi. 96 dpi is normal size. Higher values are 10% higher each.
