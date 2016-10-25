@@ -17,15 +17,15 @@ public class BadTest extends DFAModel{
     @Override
     protected void InitializeDFA() {
         SetMove(0, '1', 0);
-        //SetMove(0, '0', 1);
+        SetMove(0, '0', 1);
         
-        //SetMove(1, '1', 0);
-        //SetMove(1, '0', 2);
+        SetMove(1, '1', 0);
+        SetMove(1, '0', 2);
         
         SetMove(2, '1', 0);
         SetMove(2, '0', 3);
         
-        //SetMove(3, new char[]{'0','1'}, 3);
+        SetMove(3, new char[]{'0','1'}, 3);
         
         AddFinalState(3);
     }
@@ -42,8 +42,8 @@ public class BadTest extends DFAModel{
         //String line = reader.readLine();
 
         //toJava("Es1_3");
-       // new BadTest().ToJava("Test_Code");
-        //new BadTest().ToDotAlternative("Test_Dot");
+        new BadTest().ToJava("Test_Code");
+        new BadTest().ToDot("Test_Dot");
         new BadTest().ToPng("Test");
     }
     

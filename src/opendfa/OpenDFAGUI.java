@@ -269,8 +269,8 @@ public class OpenDFAGUI extends javax.swing.JFrame {
         }
 
         /**
-         * Imposta una move da uno stato p ad uno stato q dovuta a un carattere
-         * ch
+         * Imposta una Move da uno stato p ad uno stato q dovuta a un carattere
+ ch
          *
          * @param p stato iniziale
          * @param ch carattere
@@ -284,7 +284,7 @@ public class OpenDFAGUI extends javax.swing.JFrame {
         }
 
         /**
-         * Imposta una move da uno stato p ad uno stato q per un range di valori
+         * Imposta una Move da uno stato p ad uno stato q per un range di valori
          *
          * @param p stato iniziale
          * @param start inizio del range di valori

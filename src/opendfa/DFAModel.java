@@ -42,8 +42,8 @@ public abstract class DFAModel {
     }
 
     /**
-     * Imposta una move da uno stato p ad uno stato q dovuta a un carattere
-     * speciale
+     * Imposta una Move da uno stato p ad uno stato q dovuta a un carattere
+ speciale
      *
      * @see <code>RangeChar</code> per maggiori informazioni
      * @param p stato iniziale
@@ -59,18 +59,18 @@ public abstract class DFAModel {
     }
 
     /**
-     * Imposta una move da uno stato p ad uno stato q dovuta a un carattere ch
+     * Imposta una Move da uno stato p ad uno stato q dovuta a un carattere ch
      *
      * @param p stato iniziale
      * @param ch carattere
      * @param q stato finale
      */
     protected void SetMove(Integer p, char ch, Integer q) {
-        dfa.setMove(p, ch, q);
+        dfa.SetMove(p, ch, q);
     }
 
     /**
-     * Imposta una move da uno stato p ad uno stato q per un range di valori
+     * Imposta una Move da uno stato p ad uno stato q per un range di valori
      *
      * @param p stato iniziale
      * @param start inizio del range di valori
@@ -81,7 +81,7 @@ public abstract class DFAModel {
      * <code>protected void SetMove(Integer p, RangeChar g, Integer q)</code>
      */
     protected void SetMove(Integer p, char start, char end, Integer q) {
-        dfa.setMove(p, start, end, q);
+        dfa.SetMove(p, start, end, q);
     }
 
     /**
@@ -106,7 +106,7 @@ public abstract class DFAModel {
      * @param p stato finale
      */
     protected void AddFinalState(Integer p) {
-        dfa.addFinalState(p);
+        dfa.AddFinalState(p);
     }
 
     /**
@@ -146,25 +146,6 @@ public abstract class DFAModel {
      */
     public void ToPng(String name, String outputDir) {
         dfa.toPNG(name, outputDir);
-    }
-
-    /**
-     * Stampa il dot del DFA (Variante Abbelita).
-     *
-     * @param name node nel grafo
-     */
-    public void ToDotAlternative(String name) {
-        dfa.toDOTAlternative(name);
-    }
-
-    /**
-     * Stampa il dot del DFA (Variante Abbelita).
-     *
-     * @param name node nel grafo
-     * @param outputDir URL della directory di output
-     */
-    public void ToDotAlternative(String name, String outputDir) {
-        dfa.toDOTAlternative(name, outputDir);
     }
 
     /**

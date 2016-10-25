@@ -5,6 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -104,7 +107,7 @@ public class DFA {
      * mosse a stati di arrivo.
      */
     @SuppressWarnings("FieldMayBeFinal")
-    private HashMap<Move, Integer> transitions;
+    private HashMap<Move, Integer> edges;
 
     /**
      * Crea un DFA con un dato numero di stati.
@@ -114,7 +117,7 @@ public class DFA {
     public DFA(int n) {
         numberOfStates = n;
         finalStates = new HashSet<>();
-        transitions = new HashMap<>();
+        edges = new HashMap<>();
     }
 
     /**
@@ -126,10 +129,8 @@ public class DFA {
      * @return <code>true</code> se lo stato di partenza e lo stato di arrivo
      * sono validi, <code>false</code> alltrimenti.
      */
-    public boolean addMove(int p, char ch, int q) {
-        //non ho capito che ci devo implementare qui: sembra identico a setmove
-        //TODO: rivedere
-        return setMove(p, ch, q);
+    public boolean AddMove(int p, char ch, int q) {
+        return SetMove(p, ch, q);
     }
 
     /**
@@ -137,7 +138,7 @@ public class DFA {
      *
      * @return L'indice del nuovo stato creato
      */
-    public int newState() {
+    public int AddNewState() {
         return numberOfStates++;
     }
 
@@ -151,14 +152,14 @@ public class DFA {
      * @return <code>true</code> se lo stato di partenza e lo stato di arrivo
      * sono validi, <code>false</code> altrimenti.
      */
-    public boolean setMove(int p, char start, char end, int q) {
+    public boolean SetMove(int p, char start, char end, int q) {
         boolean check = true;
         if (start > end) {
             throw new IllegalArgumentException("start non può essere minore di end");
         }
         char ch = start;
         while (ch <= end) {
-            check = setMove(p, ch++, q);
+            check = SetMove(p, ch++, q);
         }
         return check;
     }
@@ -172,12 +173,55 @@ public class DFA {
      * @return <code>true</code> se lo stato di partenza e lo stato di arrivo
      * sono validi, <code>false</code> altrimenti.
      */
-    public boolean setMove(int p, char ch, int q) {
-        if (!validState(p) || !validState(q)) {
+    public boolean SetMove(int p, char ch, int q) {
+        ArrayList<Character> chlist = new ArrayList<>();
+        chlist.add(ch);
+        return SetMove(p, chlist, q);
+    }
+
+    /**
+     * Aggiunge una transizione all'automa.
+     *
+     * @param p Lo stato di partenza della transizione.
+     * @param ch Il simbolo che etichetta la transizione.
+     * @param q Lo stato di arrivo della transizione.
+     * @return <code>true</code> se lo stato di partenza e lo stato di arrivo
+     * sono validi, <code>false</code> altrimenti.
+     */
+    public boolean SetMove(int p, char[] ch, int q) {
+        ArrayList<Character> chlist = new ArrayList<>();
+        for (Character c : ch) {
+            chlist.add(c);
+        }
+        return SetMove(p, chlist, q);
+    }
+
+    /**
+     * Aggiunge una transizione all'automa.
+     *
+     * @param p Lo stato di partenza della transizione.
+     * @param ch Il simbolo che etichetta la transizione.
+     * @param q Lo stato di arrivo della transizione.
+     * @return <code>true</code> se lo stato di partenza e lo stato di arrivo
+     * sono validi, <code>false</code> altrimenti.
+     */
+    public boolean SetMove(int p, ArrayList<Character> ch, int q) {
+        if (!ValidState(p) || !ValidState(q)) {
             return false;
         }
-
-        transitions.put(new Move(p, ch), q);
+        Move found = null;
+        for (Move m : edges.keySet()) {
+            if (m.start == p && edges.get(m)==q ) {
+                found = m;
+            }
+        }
+        if (found == null) {
+            edges.put(new Move(p, ch), q);
+        } else {
+            edges.remove(found);
+            found.AddAlphabet(ch);
+            edges.put(found, q);
+        }
         return true;
     }
 
@@ -188,8 +232,8 @@ public class DFA {
      * @return <code>true</code> se lo stato e` valido, <code>false</code>
      * altrimenti.
      */
-    public boolean addFinalState(int p) {
-        if (validState(p)) {
+    public boolean AddFinalState(int p) {
+        if (ValidState(p)) {
             finalStates.add(p);
             return true;
         } else {
@@ -205,7 +249,7 @@ public class DFA {
      * altrimenti.
      * @see #numberOfStates
      */
-    public boolean validState(int p) {
+    public boolean ValidState(int p) {
         return (p >= -1 && p < numberOfStates);
     }
 
@@ -217,7 +261,7 @@ public class DFA {
      * altrimenti.
      * @see #finalStates
      */
-    public boolean finalState(int p) {
+    public boolean IsFinalState(int p) {
         return finalStates.contains(p);
     }
 
@@ -226,17 +270,15 @@ public class DFA {
      *
      * @return Numero di stati.
      */
-    public int numberOfStates() {
+    public int GetNumberOfStates() {
         return numberOfStates;
     }
 
     public HashSet<Integer> GetAllState() {
-        HashSet<Integer> result = new HashSet<Integer>();
-        for (Entry<Move, Integer> entry : transitions.entrySet()) {
-            Move m = entry.getKey();
-            Integer end = entry.getValue();
-            result.add(m.start);
-            result.add(end);
+        HashSet<Integer> result = new HashSet<>();
+        for (Entry<Move, Integer> entry : edges.entrySet()) {
+            result.add(entry.getKey().start);
+            result.add(entry.getValue());
         }
         return result;
 
@@ -248,10 +290,12 @@ public class DFA {
      *
      * @return L'alfabeto dell'automa.
      */
-    public HashSet<Character> alphabet() {
+    public HashSet<Character> GetAlphabet() {
         HashSet<Character> alphabet = new HashSet<Character>();
-        for (Move m : transitions.keySet()) {
-            alphabet.add(m.ch);
+        for (Entry<Move, Integer> entry : edges.entrySet()) {
+            for (Character ch : entry.getKey().alphabet) {
+                alphabet.add(ch);
+            }
         }
         return alphabet;
     }
@@ -262,13 +306,49 @@ public class DFA {
      * @param p Stato di partenza prima della transizione.
      * @param ch Simbolo da riconoscere.
      * @return Stato di arrivo dopo la transizione, oppure <code>-1</code> se
-     * l'automa non ha una transizione etichettata con <code>ch</code> dallo
-     * stato <code>p</code>.
+     * l'automa non ha una transizione etichettata con <code>alphabet</code>
+     * dallo stato <code>p</code>.
      */
-    public int move(int p, char ch) {
+    public int Move(int p, char ch) {
         Move move = new Move(p, ch);
-        if (transitions.containsKey(move)) {
-            return transitions.get(move);
+        if (edges.containsKey(move)) {
+            return edges.get(move);
+        } else {
+            return -1;
+        }
+    }
+
+    /**
+     * Esegue una mossa dell'automa.
+     *
+     * @param p Stato di partenza prima della transizione.
+     * @param ch Simbolo da riconoscere.
+     * @return Stato di arrivo dopo la transizione, oppure <code>-1</code> se
+     * l'automa non ha una transizione etichettata con <code>alphabet</code>
+     * dallo stato <code>p</code>.
+     */
+    public int Move(int p, char[] ch) {
+        Move move = new Move(p, ch);
+        if (edges.containsKey(move)) {
+            return edges.get(move);
+        } else {
+            return -1;
+        }
+    }
+
+    /**
+     * Esegue una mossa dell'automa.
+     *
+     * @param p Stato di partenza prima della transizione.
+     * @param ch Simbolo da riconoscere.
+     * @return Stato di arrivo dopo la transizione, oppure <code>-1</code> se
+     * l'automa non ha una transizione etichettata con <code>alphabet</code>
+     * dallo stato <code>p</code>.
+     */
+    public int Move(int p, ArrayList<Character> ch) {
+        Move move = new Move(p, ch);
+        if (edges.containsKey(move)) {
+            return edges.get(move);
         } else {
             return -1;
         }
@@ -286,9 +366,9 @@ public class DFA {
         int i = 0;
         while (state >= 0 && i < s.length()) {
             final char ch = s.charAt(i++);
-            state = move(state, ch);
+            state = Move(state, ch);
         }
-        return finalState(state);
+        return IsFinalState(state);
 
     }
 
@@ -322,42 +402,12 @@ public class DFA {
 
         }
         out += "node [shape = circle];\n";
-        for (Move m : transitions.keySet()) {
-            out += "q" + m.start + " -> q" + transitions.get(m) + " [ label = \"" + m.ch + "\" ];\n";
+        for (Move m : edges.keySet()) {
+            out += "q" + m.start + " -> q" + edges.get(m) + " [ label = \"" + m.label + "\" ];\n";
         }
         out += "}";
         System.out.println(out);
         this.writeToFile(OutputDir + name + ".dot", out);
-    }
-
-    public void toDOTAlternative(String name) {
-        this.toDOTAlternative(name, OUTPUT_DIR);
-    }
-
-    public void toDOTAlternative(String name, String OutputDir) {
-        // DA IMPLEMENTARE
-        String text = "digraph " + name + " {\n"
-                + "rankdir=LR;\n"
-                + "node [shape = doublecircle];\n";
-        for (Integer c : finalStates) {
-            text += " q" + c + "; ";
-        }
-        text += "\n node [shape = circle];\n";
-        Edges arr_tmp = new Edges();
-        for (Entry<Move, Integer> entry : transitions.entrySet()) {
-            Move key = entry.getKey();
-            Integer value = entry.getValue();
-
-            arr_tmp.AddTransiction(key.start, key.ch, value);
-            //text+="q"+key.start+" -> q"+value+" [ label = \""+key.ch+"\" ] \n";
-            // do what you have to do here
-            // In your case, an other loop.
-        }
-        text += arr_tmp.toDot();
-        text += "\n}";
-        System.out.println(text);
-        this.writeToFile(OutputDir + name + ".dot", text);
-
     }
 
     public void toPNG(String Name) {
@@ -367,7 +417,7 @@ public class DFA {
 
     public void toPNG(String Name, String OutputDir) {
         try {
-            this.toDOTAlternative(Name, TEMP_DIR);
+            this.toDOT(Name, TEMP_DIR);
             String dotFIleUrl = TEMP_DIR + Name + ".dot";
             Runtime rt = Runtime.getRuntime();
             String[] args = {DOT, "-Tpng", "-Gdpi=" + dpiSizes[this.currentDpiPos], dotFIleUrl, "-o", OutputDir + Name + ".png"};
@@ -388,18 +438,6 @@ public class DFA {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(DFA.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    private Edges GenerateSupport() {
-        Edges arr_tmp = new Edges();
-        for (Entry<Move, Integer> entry : transitions.entrySet()) {
-            Move key = entry.getKey();
-            Integer value = entry.getValue();
-
-            arr_tmp.AddTransiction(key.start, key.ch, value);
-//            s+="\t\t\tcase "+String.valueOf(key.start)+" : \n";  
-        }
-        return arr_tmp;
     }
 
     /**
@@ -427,9 +465,32 @@ public class DFA {
                 + "\t\twhile(state >= 0 && i < s.length()) {\n"
                 + "\t\tfinal char ch = s.charAt(i++);\n"
                 + "\t\tswitch(state) {\n";
+        ArrayList<Move> entries = orderByInitialState();
+        Integer OldState = -1;
+        for (Move move : entries) {
+            Integer end = edges.get(move);
+            if (move.start != OldState) {
+                if (OldState != -1) {
+                    s += "\t\t\t\t else \n\t\t\t\t\t state = -1; \n\t\t\t break; \n";
+                }
+                s += "\t\t\t case " + move.start + ": \n";
+                OldState = move.start;
+                s += "\t\t\t\t if( ";
+            } else {
+                s += "\t\t\t\t else if( ";
+            }
+            if (move.alphabet.size() > 0) {
 
-        Edges arr_tmp = GenerateSupport();
-        s += arr_tmp.toJava();
+                for (int i = 0; i < move.alphabet.size() - 1; i++) {
+                    s += " ch == " + move.alphabet.get(i) + " || ";
+                }
+                s += " ch == " + move.alphabet.get(move.alphabet.size() - 1);
+                s += " ) \n";
+                s += "\t\t\t\t\t state = " + end + ";\n";
+            }
+
+        }
+        s += "\t\t\t\t else \n\t\t\t\t\t state = -1; \n\t\t\t break; \n";
         s += "\t\t\t}\n\t\t}\n";
 
         s += "\t\treturn ";
@@ -448,18 +509,24 @@ public class DFA {
         this.writeToFile(OutputDir + name + "_code.java", s);
     }
 
+    private ArrayList<Move> orderByInitialState() {
+        ArrayList<Move> result = new ArrayList<>(edges.keySet());
+        Collections.sort(result, new Comparator<Move>() {
+            @Override
+            public int compare(Move item1, Move item2) {
+                return ((Integer) item1.start).compareTo(item2.start);
+            }
+        });
+        return result;
+    }
+
     /**
      * ************PROBLEMI DI RAGGIUNGIBILITA'*****************
      */
     protected HashSet<Integer> reach(Integer state) {
-        if (!validState(state)) {
+        if (!ValidState(state)) {
             return new HashSet<Integer>();
         }
-//        Metodo SUpport
-//        Edges arr_tmp = GenerateSupport();
-//        Boolean[] res = arr_tmp.reach(state, numberOfStates);
-
-//        Metodo Normale
         Boolean[] res = new Boolean[numberOfStates];
         for (int i = 0; i < numberOfStates; i++) {
             res[i] = (state == i);
@@ -468,11 +535,11 @@ public class DFA {
         while (check) {
             check = false;
             for (int i = 0; i < numberOfStates; i++) {
-                for (Entry<Move, Integer> entry : transitions.entrySet()) {
+                for (Entry<Move, Integer> entry : edges.entrySet()) {
                     Move key = entry.getKey();
                     Integer value = entry.getValue();
 
-                    if (res[key.start] && !res[value] && validState(value)) {
+                    if (res[key.start] && !res[value] && ValidState(value)) {
                         res[value] = check = true;
                     }
 
@@ -523,7 +590,7 @@ public class DFA {
     }
 
     public HashMap<Integer, String> samples(Integer state) {
-        if (!validState(state)) {
+        if (!ValidState(state)) {
             return null;
         }
 
@@ -535,16 +602,16 @@ public class DFA {
         while (check) {
             check = false;
             for (int i = 0; i < numberOfStates; i++) {
-                for (Entry<Move, Integer> entry : transitions.entrySet()) {
+                for (Entry<Move, Integer> entry : edges.entrySet()) {
                     Move key = entry.getKey();
                     Integer value = entry.getValue();
 
-                    if (res[key.start] != null && validState(value) && (res[value] == null || !res[value].contains(String.valueOf(key.ch)))) {
+                    if (res[key.start] != null && ValidState(value) && (res[value] == null || !res[value].contains(String.valueOf(key.alphabet)))) {
                         check = true;
                         if (res[value] == null) {
                             res[value] = "";
                         }
-                        res[value] += res[key.start] + String.valueOf(key.ch);
+                        res[value] += res[key.start] + String.valueOf(key.alphabet);
                     }
 
                 }
@@ -553,7 +620,7 @@ public class DFA {
 
         HashMap<Integer, String> result = new HashMap<>();
         for (int i = 0; i < res.length; i++) {
-            if (finalState(i) && res[i] != null) {
+            if (IsFinalState(i) && res[i] != null) {
                 result.put(i, res[i]);
             }
 
@@ -568,7 +635,7 @@ public class DFA {
         Boolean[][] eq = new Boolean[numberOfStates][numberOfStates];
         for (int i = 0; i < numberOfStates; i++) {
             for (int j = 0; j < numberOfStates; j++) {
-                eq[i][j] = ((finalState(i) && finalState(j)) || (!finalState(i) && !finalState(j)));
+                eq[i][j] = ((IsFinalState(i) && IsFinalState(j)) || (!IsFinalState(i) && !IsFinalState(j)));
             }
         }
 
@@ -579,10 +646,10 @@ public class DFA {
             for (int i = 0; i < numberOfStates; i++) {
                 for (int j = 0; j < numberOfStates; j++) {
                     if (eq[i][j]) {
-                        for (Entry<Move, Integer> entry : transitions.entrySet()) {
+                        for (Entry<Move, Integer> entry : edges.entrySet()) {
                             Move key = entry.getKey();
                             //Integer value = entry.getValue();
-                            if (validState(move(i, key.ch)) && validState(move(i, key.ch)) && move(i, key.ch) >= 0 && move(j, key.ch) >= 0 && !eq[move(i, key.ch)][move(j, key.ch)]) {
+                            if (ValidState(Move(i, key.alphabet)) && ValidState(Move(i, key.alphabet)) && Move(i, key.alphabet) >= 0 && Move(j, key.alphabet) >= 0 && !eq[Move(i, key.alphabet)][Move(j, key.alphabet)]) {
                                 check = true;
                                 eq[i][j] = false;
                             }
@@ -615,13 +682,13 @@ public class DFA {
         }
         HashSet<Integer> sink = sink();
         DFA B = new DFA(k + 1);
-        for (Entry<Move, Integer> entry : transitions.entrySet()) {
+        for (Entry<Move, Integer> entry : edges.entrySet()) {
             Move key = entry.getKey();
             Integer value = entry.getValue();
             if (m[key.start] != null && m[value] != null && !sink.contains(m[value])) {
-                B.setMove(m[key.start], key.ch, m[value]);
-                if (finalState(m[key.start]) && !B.finalState(m[key.start])) {
-                    B.addFinalState(m[key.start]);
+                B.SetMove(m[key.start], key.alphabet, m[value]);
+                if (IsFinalState(m[key.start]) && !B.IsFinalState(m[key.start])) {
+                    B.AddFinalState(m[key.start]);
                 }
             }
         }
@@ -633,7 +700,7 @@ public class DFA {
         DFA minimize = this.minimize();
         DFA minimize2 = dfa.minimize();
 
-        return (minimize.numberOfStates == minimize2.numberOfStates && minimize.finalStates.equals(minimize2.finalStates) && minimize.transitions.equals(minimize2.transitions));
+        return (minimize.numberOfStates == minimize2.numberOfStates && minimize.finalStates.equals(minimize2.finalStates) && minimize.edges.equals(minimize2.edges));
     }
 
     public Integer[] getFinalState() {

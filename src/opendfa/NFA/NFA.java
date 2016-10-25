@@ -157,8 +157,8 @@ public class NFA {
     public HashSet<Character> alphabet() {
         HashSet<Character> alphabet = new HashSet<Character>();
         for (Move m : transitions.keySet()) {
-            if (m.ch != NFA.EPSILON) {
-                alphabet.add(m.ch);
+            if (!m.alphabet.contains(NFA.EPSILON)) {
+                alphabet.addAll(m.alphabet);
             }
         }
         return alphabet;
@@ -224,7 +224,7 @@ public class NFA {
             for (int i = 0; i < r.length; i++) {
                 if (r[i]) {
                     for (Move m : transitions.keySet()) {
-                        if (m.start == i && m.ch == EPSILON) {
+                        if (m.start == i && m.alphabet.contains(NFA.EPSILON)) {
                             for (int j : transitions.get(m)) {
                                 if (!r[j]) {
                                     r[j] = modificato = true;
@@ -277,7 +277,7 @@ public class NFA {
         DFA dfa = new DFA(0); // il DFA
         Stack<Integer> newStates = new Stack<Integer>(); // nuovi stati del DFA
         HashSet<Character> alphabet = alphabet();
-        int q0 = dfa.newState(); // stato iniziale del DFA
+        int q0 = dfa.AddNewState(); // stato iniziale del DFA
         indexOfSet.put(epsilonClosure(0), q0); // stati dell'NFA corrisp. a q0
         setOfIndex.put(q0, epsilonClosure(0));
         newStates.push(q0); // nuovo stato da esplorare
@@ -288,20 +288,20 @@ public class NFA {
                 HashSet<Integer> qset = epsilonClosure(move(pset, ch));
                 if (indexOfSet.containsKey(qset)) { // se qset non e` nuovo...
                     final int q = indexOfSet.get(qset); // recupero il suo indice
-                    dfa.setMove(p, ch, q); // aggiungo la transizione
+                    dfa.SetMove(p, ch, q); // aggiungo la transizione
                 } else { // se invece qset e` nuovo
-                    final int q = dfa.newState(); // creo lo stato nel DFA
+                    final int q = dfa.AddNewState(); // creo lo stato nel DFA
                     indexOfSet.put(qset, q); // aggiorno la corrispondenza
                     setOfIndex.put(q, qset);
                     newStates.push(q); // q e` da visitare
-                    dfa.setMove(p, ch, q); // aggiungo la transizione
+                    dfa.SetMove(p, ch, q); // aggiungo la transizione
                 }
             }
         }
 // stabilisco gli stati finali del DFA
-        for (int p = 0; p < dfa.numberOfStates(); p++) {
+        for (int p = 0; p < dfa.GetNumberOfStates(); p++) {
             if (finalState(setOfIndex.get(p))) {
-                dfa.addFinalState(p);
+                dfa.AddFinalState(p);
             }
         }
         return dfa;
@@ -318,24 +318,26 @@ public class NFA {
         text += "\n node [shape = circle];\n";
         for (Entry<Move, HashSet<Integer>> entry : transitions.entrySet()) {
             for (Integer end : entry.getValue()) {
-                text += "q" + entry.getKey().start + " -> q" + end + "[label = \"" + entry.getKey().ch + "\" ] \n";
+                text += "q" + entry.getKey().start + " -> q" + end + "[label = \"" + entry.getKey().alphabet + "\" ] \n";
             }
         }
 
         System.out.println(text);
     }
 
+    /*
+    NOTE: non ho trovato riferimenti su questo medoto o eventuali utilizzi
     public int append(NFA a) {
         final int n = numberOfStates;
         numberOfStates += a.numberOfStates();
         for (Move m : a.transitions.keySet()) {
             for (int q : a.transitions.get(m)) {
-                addMove(n + m.start, m.ch, n + q);
+                addMove(n + m.start, m.alphabet, n + q);
             }
         }
         return n;
     }
-
+*/
     protected void toDOT(String name) {
         String out = "digraph " + name + "{\n";
         out += "rankdir=LR;\n";
@@ -346,7 +348,7 @@ public class NFA {
         out += "node [shape = circle];\n";
         for (Move m : transitions.keySet()) {
             for (int i : transitions.get(m)) {
-                out += "q" + m.start + " -> q" + i + " [ label = \"" + (m.ch != NFA.EPSILON ? m.ch : "ɛ") + "\" ];\n";
+                out += "q" + m.start + " -> q" + i + " [ label = \"" + (!m.alphabet.contains(NFA.EPSILON) ? m.alphabet : "ɛ") + "\" ];\n";
             }
         }
         out += "}";
