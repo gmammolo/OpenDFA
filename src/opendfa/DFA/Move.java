@@ -2,6 +2,7 @@ package opendfa.DFA;
 
 
 /**
+ * @deprecated 
  * Un oggetto della classe <code>Move</code> rappresenta una mossa di
  * un automa a stati finiti, ovvero una coppia costituita da uno stato
  * di partenza e da un simbolo dell'alfabeto dell'automa.
@@ -30,6 +31,7 @@ public class Move
      *         hanno lo stesso stato di partenza e lo stesso simbolo,
      *         <code>false</code> altrimenti.
      */
+    @Override
     public boolean equals(Object o) {
 	if (o instanceof Move) {
 	    Move m = (Move) o;
@@ -42,6 +44,7 @@ public class Move
      * Calcola il valore hash della mossa.
      * @return Il valore hash.
      */
+    @Override
     public int hashCode() {
 	return start ^ (int) ch;
     }

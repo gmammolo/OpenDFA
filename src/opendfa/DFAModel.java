@@ -3,9 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package opendfa.DFA;
+package opendfa;
+
+import opendfa.DFA.DFA;
+import opendfa.DFA.RangeChar;
 
 /**
+ * Modello del DFA per utilizzare direttamente le api senza interfaccia grafica
  *
  * @author giuseppe
  */
@@ -37,7 +41,16 @@ public abstract class DFAModel {
         InitializeDFA();
     }
 
-    protected void SetMove(Integer p, Gen g, Integer q) {
+    /**
+     * Imposta una move da uno stato p ad uno stato q dovuta a un carattere
+     * speciale
+     *
+     * @see <code>RangeChar</code> per maggiori informazioni
+     * @param p stato iniziale
+     * @param g carattere
+     * @param q stato finale
+     */
+    protected void SetMove(Integer p, RangeChar g, Integer q) {
         if (g.val.length > 0) {
             SetMove(p, g.val, q);
         } else {
@@ -63,6 +76,9 @@ public abstract class DFAModel {
      * @param start inizio del range di valori
      * @param end fine del range di valori
      * @param q stato finale
+     * @deprecated
+     * @see
+     * <code>protected void SetMove(Integer p, RangeChar g, Integer q)</code>
      */
     protected void SetMove(Integer p, char start, char end, Integer q) {
         dfa.setMove(p, start, end, q);
@@ -74,6 +90,9 @@ public abstract class DFAModel {
      * @param ch array di char contente la serie di caratteri che permettono il
      * movimento
      * @param q stato finale
+     * @deprecated
+     * @see
+     * <code>protected void SetMove(Integer p, RangeChar g, Integer q)</code>
      */
     protected void SetMove(Integer p, char[] ch, Integer q) {
         for (Character a : ch) {
@@ -91,32 +110,61 @@ public abstract class DFAModel {
     }
 
     /**
-     * Stampa a video il dot del DFA
+     * Stampa il dot del DFA. l'output URL è definito in config.properties
      *
-     * @param s
+     * @param name node nel grafo
+     *
      */
-    public void toDot(String name) {
+    public void ToDot(String name) {
         dfa.toDOT(name);
     }
 
-    public void toDot(String name, String outputDir) {
+    /**
+     * Stampa il dot del DFA.
+     *
+     * @param name node nel grafo
+     * @param outputDir URL della directory di output
+     */
+    public void ToDot(String name, String outputDir) {
         dfa.toDOT(name, outputDir);
     }
 
-    public void toPng(String name) {
+    /**
+     * Genera il png del DFA (Richiede GraphViz installato).
+     *
+     * @param name node nel grafo
+     */
+    public void ToPng(String name) {
         dfa.toPNG(name);
     }
 
-    public void toPng(String name, String outputDir) {
+    /**
+     * Genera il png del DFA (Richiede GraphViz installato).
+     *
+     * @param name node nel grafo
+     * @param outputDir URL della directory di output
+     */
+    public void ToPng(String name, String outputDir) {
         dfa.toPNG(name, outputDir);
     }
 
-    public void toDotAlternative(String name) {
+    /**
+     * Stampa il dot del DFA (Variante Abbelita).
+     *
+     * @param name node nel grafo
+     */
+    public void ToDotAlternative(String name) {
         dfa.toDOTAlternative(name);
     }
 
-    public void toDotAlternative(String name, String OutputDir) {
-        dfa.toDOTAlternative(name, OutputDir);
+    /**
+     * Stampa il dot del DFA (Variante Abbelita).
+     *
+     * @param name node nel grafo
+     * @param outputDir URL della directory di output
+     */
+    public void ToDotAlternative(String name, String outputDir) {
+        dfa.toDOTAlternative(name, outputDir);
     }
 
     /**
@@ -124,13 +172,30 @@ public abstract class DFAModel {
      *
      * @param s nome della classe java
      */
-    public void toJava(String s) {
+    public void ToJava(String s) {
         dfa.toJava(s);
     }
 
+    /**
+     * Stampa a video il codice del dfa
+     *
+     * @param s nome della classe java
+     * @param outputDir URL della directory di output
+     *
+     */
+    public void ToJava(String s, String outputDir) {
+        dfa.toJava(s, outputDir);
+    }
+
+    /**
+     * Verifica se una stringa e` riconosciuta dall'automa.
+     *
+     * @param line Stringa da riconoscere.
+     * @return <code>true</code> se la stringa e` stata riconosciuta,
+     * <code>false</code> altrimenti.
+     */
     public boolean Scan(String line) {
         return dfa.scan(line);
     }
-    
 
 }

@@ -21,18 +21,18 @@ public class DFA {
     /**
      * Detects the client's operating system.
      */
-    private final static String osName = System.getProperty("os.name").replaceAll("\\s", "");
+    private final static String OS_NAME = System.getProperty("os.name").replaceAll("\\s", "");
     /**
      * Load the config.properties file.
      */
-    private final static String cfgProp = "/home/terasud/NetBeansProjects/OpenDFA/config/config.properties";
-    private final static Properties configFile = new Properties() {
+    private final static String CFG_PROP = "/home/terasud/NetBeansProjects/OpenDFA/config/config.properties";
+    private final static Properties CONFIG_FILE = new Properties() {
         private final static long serialVersionUID = 1L;
 
         {
             try {
-                load(new FileInputStream(cfgProp));
-            } catch (Exception e) {
+                load(new FileInputStream(CFG_PROP));
+            } catch (IOException e) {
             }
         }
     };
@@ -40,17 +40,17 @@ public class DFA {
     /**
      * The dir. where temporary files will be created.
      */
-    private static final String OUTPUT_DIR = configFile.getProperty("outputDir");
+    private static final String OUTPUT_DIR = CONFIG_FILE.getProperty("outputDir");
 
     /**
      * The dir. where temporary files will be created.
      */
-    private static final String TEMP_DIR = configFile.getProperty("tempDir");
+    private static final String TEMP_DIR = CONFIG_FILE.getProperty("tempDir");
 
     /**
      * Where is your dot program located? It will be called externally.
      */
-    private static final String DOT = configFile.getProperty("dotFor" + osName);
+    private static final String DOT = CONFIG_FILE.getProperty("dotFor" + OS_NAME);
 
     /**
      * The image size in dpi. 96 dpi is normal size. Higher values are 10%
@@ -58,7 +58,7 @@ public class DFA {
      *
      * dpi patch by Peter Mueller
      */
-    private int[] dpiSizes = {46, 51, 57, 63, 70, 78, 86, 96, 106, 116, 128, 141, 155, 170, 187, 206, 226, 249};
+    private final int[] dpiSizes = {46, 51, 57, 63, 70, 78, 86, 96, 106, 116, 128, 141, 155, 170, 187, 206, 226, 249};
 
     /**
      * Define the index in the image size array.
@@ -68,7 +68,7 @@ public class DFA {
     /**
      * Increase the image size (dpi).
      */
-    public void increaseDpi() {
+    public void IncreaseDpi() {
         if (this.currentDpiPos < (this.dpiSizes.length - 1)) {
             ++this.currentDpiPos;
         }
@@ -96,12 +96,14 @@ public class DFA {
     /**
      * Insieme degli stati finali dell'automa.
      */
+    @SuppressWarnings("FieldMayBeFinal")
     private HashSet<Integer> finalStates;
 
     /**
      * Funzione di transizione dell'automa, rappresentata come una mappa da
      * mosse a stati di arrivo.
      */
+    @SuppressWarnings("FieldMayBeFinal")
     private HashMap<Move, Integer> transitions;
 
     /**
@@ -341,7 +343,7 @@ public class DFA {
             text += " q" + c + "; ";
         }
         text += "\n node [shape = circle];\n";
-        Support_Transitions arr_tmp = new Support_Transitions();
+        Edges arr_tmp = new Edges();
         for (Entry<Move, Integer> entry : transitions.entrySet()) {
             Move key = entry.getKey();
             Integer value = entry.getValue();
@@ -388,8 +390,8 @@ public class DFA {
         }
     }
 
-    private Support_Transitions GenerateSupport() {
-        Support_Transitions arr_tmp = new Support_Transitions();
+    private Edges GenerateSupport() {
+        Edges arr_tmp = new Edges();
         for (Entry<Move, Integer> entry : transitions.entrySet()) {
             Move key = entry.getKey();
             Integer value = entry.getValue();
@@ -426,7 +428,7 @@ public class DFA {
                 + "\t\tfinal char ch = s.charAt(i++);\n"
                 + "\t\tswitch(state) {\n";
 
-        Support_Transitions arr_tmp = GenerateSupport();
+        Edges arr_tmp = GenerateSupport();
         s += arr_tmp.toJava();
         s += "\t\t\t}\n\t\t}\n";
 
@@ -454,7 +456,7 @@ public class DFA {
             return new HashSet<Integer>();
         }
 //        Metodo SUpport
-//        Support_Transitions arr_tmp = GenerateSupport();
+//        Edges arr_tmp = GenerateSupport();
 //        Boolean[] res = arr_tmp.reach(state, numberOfStates);
 
 //        Metodo Normale

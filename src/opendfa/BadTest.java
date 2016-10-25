@@ -42,9 +42,9 @@ public class BadTest extends DFAModel{
         //String line = reader.readLine();
 
         //toJava("Es1_3");
-       // new BadTest().toJava("Test_Code");
-        //new BadTest().toDotAlternative("Test_Dot");
-        new BadTest().toPng("Test");
+       // new BadTest().ToJava("Test_Code");
+        //new BadTest().ToDotAlternative("Test_Dot");
+        new BadTest().ToPng("Test");
     }
     
 }

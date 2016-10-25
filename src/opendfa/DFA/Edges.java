@@ -11,20 +11,20 @@ import java.util.Comparator;
 import java.util.HashSet;
 
 
-public class Support_Transitions {
+public class Edges {
 
-    private ArrayList<Transition> transition;
+    private ArrayList<Edge> edge;
     
     
-    public Support_Transitions(){
-        transition = new ArrayList();
+    public Edges(){
+        edge = new ArrayList();
     }
     
     
     public HashSet<Integer> InitialState()
     {
         HashSet<Integer> state = new HashSet<Integer>();
-        for(Transition tr : transition)
+        for(Edge tr : edge)
         {
             state.add(tr.start);
         }
@@ -39,7 +39,7 @@ public class Support_Transitions {
         {
            res[i] = (start == i);
         }
-        for(Transition tr: transition)
+        for(Edge tr: edge)
         {
             if(tr.start==start)
             {
@@ -58,7 +58,7 @@ public class Support_Transitions {
      */
     public Integer GetTransition(Integer start, char c)
     {
-        for(Transition tr: transition)
+        for(Edge tr: edge)
         {
             if(tr.start==start && tr.label.contains(c))
                 return tr.end;
@@ -69,14 +69,14 @@ public class Support_Transitions {
     
     public void AddTransiction(int start, char ch, int end)
     {
-        Transition ts=new Transition(start, end,ch); 
-        if(transition.contains(ts))
+        Edge ts=new Edge(start, end,ch); 
+        if(edge.contains(ts))
         {
-           ((Transition)transition.get(transition.indexOf(ts))).AddLabel(ch);
+           ((Edge)edge.get(edge.indexOf(ts))).AddLabel(ch);
         }
         else
         {
-            transition.add(ts);
+            edge.add(ts);
         }
     }
     
@@ -90,10 +90,10 @@ public class Support_Transitions {
     public String toDot()
     {
         String s="";
-        for(Object o : transition)
+        for(Object o : edge)
         {
-            if (o instanceof Transition) {
-                Transition m = (Transition) o;
+            if (o instanceof Edge) {
+                Edge m = (Edge) o;
             
                 s+=m.toDot();
             }
@@ -110,22 +110,22 @@ public class Support_Transitions {
     public String toJava()
     {
         String s = "";
-        if(transition.size()>0)
+        if(edge.size()>0)
         {
             //sorting
-            Collections.sort(transition, new Comparator<Transition >() {
+            Collections.sort(edge, new Comparator<Edge >() {
                 @Override
-                public int compare(Transition t, Transition t1) {
+                public int compare(Edge t, Edge t1) {
                     return (t.start.compareTo(t1.start));
                 }
             });
             
-            int oldstate = ((Transition)transition.get(0)).start;
+            int oldstate = ((Edge)edge.get(0)).start;
             s+="\t\t\tcase "+oldstate+":\n";
-            s+="\t\t\t\t"+((Transition)transition.get(0)).toJava();
-            for(int i=1; i<transition.size();i++)
+            s+="\t\t\t\t"+((Edge)edge.get(0)).toJava();
+            for(int i=1; i<edge.size();i++)
             {
-                Transition tr= ((Transition)transition.get(i));
+                Edge tr= ((Edge)edge.get(i));
                 if(tr.start != oldstate)
                 {
                     s +="\t\t\t\telse \n \t\t\t\t\tstate = -1; \n \t\t\t\tbreak;\n";
@@ -145,7 +145,7 @@ public class Support_Transitions {
      *
      * @author giuseppe
      */
-    public class Transition {
+    public class Edge {
         /** Lo stato di partenza. */
         final Integer start;
         /** Lo stato di arrivo. */
@@ -157,7 +157,7 @@ public class Support_Transitions {
 //         * @param start
 //         * @param end 
 //         */
-//        public Transition(int start, int end)
+//        public Edge(int start, int end)
 //        {
 //            this.start = start;
 //            this.end = end;
@@ -169,7 +169,7 @@ public class Support_Transitions {
         * @param start
         * @param end 
         */
-        public Transition(int start, int end, char ch)
+        public Edge(int start, int end, char ch)
         {
             this.start = start;
             this.end = end;
@@ -186,8 +186,8 @@ public class Support_Transitions {
          *         <code>false</code> altrimenti.
          */
         public boolean equals(Object o) {
-            if (o instanceof Transition) {
-                Transition m = (Transition) o;
+            if (o instanceof Edge) {
+                Edge m = (Edge) o;
                 return (start == m.start && end == m.end);
             } else
                 return false;
