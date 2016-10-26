@@ -31,7 +31,9 @@ public class Move {
         this.start = start;
         this.alphabet = new ArrayList<>();
         for (char c : ch) {
-            this.alphabet.add(c);
+            if (!this.alphabet.contains(c)) {
+                this.alphabet.add(c);
+            }
         }
         _regenerateLabel();
     }
@@ -44,7 +46,12 @@ public class Move {
      */
     public Move(int start, ArrayList<Character> ch) {
         this.start = start;
-        this.alphabet = ch;
+        this.alphabet = new ArrayList<>();
+        for (char c : ch) {
+            if (!this.alphabet.contains(c)) {
+                this.alphabet.add(c);
+            }
+        }
         _regenerateLabel();
     }
 
@@ -57,7 +64,10 @@ public class Move {
     public Move(int start, char ch) {
         this.start = start;
         this.alphabet = new ArrayList<>();
-        this.alphabet.add(ch);
+        if (!this.alphabet.contains(ch)) {
+            this.alphabet.add(ch);
+        }
+
         _regenerateLabel();
     }
 
@@ -74,10 +84,12 @@ public class Move {
         if (o instanceof Move) {
             Move m = (Move) o;
             Boolean contain = false;
-            for(char c : m.alphabet) {
-                if(alphabet.contains(c)) contain = true;
+            for (char c : m.alphabet) {
+                if (alphabet.contains(c)) {
+                    contain = true;
+                }
             }
-            return contain &&  start == m.start ;
+            return contain && start == m.start;
         } else {
             return false;
         }
@@ -97,6 +109,9 @@ public class Move {
      * @param ch
      */
     public void addAlphabet(char c) {
+        if (!this.alphabet.contains(c)) {
+            this.alphabet.add(c);
+        }
         this.alphabet.add(c);
         _regenerateLabel();
     }
@@ -108,7 +123,9 @@ public class Move {
      */
     public void addAlphabet(char[] ch) {
         for (char c : ch) {
-            this.alphabet.add(c);
+            if (!this.alphabet.contains(c)) {
+                this.alphabet.add(c);
+            }
         }
         _regenerateLabel();
     }
@@ -119,7 +136,11 @@ public class Move {
      * @param ch
      */
     public void addAlphabet(ArrayList<Character> ch) {
-        this.alphabet.addAll(ch);
+        for (char c : ch) {
+            if (!this.alphabet.contains(c)) {
+                this.alphabet.add(c);
+            }
+        }
         _regenerateLabel();
     }
 
@@ -135,25 +156,25 @@ public class Move {
             return;
         }
 
-        int size = this.alphabet.size()-1;
+        int size = this.alphabet.size() - 1;
         int i;
         for (i = 0; i < size; i++) {
             if (alphabet.get(i) == alphabet.get(i + 1) - 1) {
                 label += this.alphabet.get(i);
                 label += "-";
-                while (i < size  && alphabet.get(i) == alphabet.get(i + 1) - 1) {
+                while (i < size && alphabet.get(i) == alphabet.get(i + 1) - 1) {
                     i++;
                 }
                 if (i != size) {
-                    label += alphabet.get(i)+", ";
+                    label += alphabet.get(i) + ", ";
                 }
             } else {
                 label += alphabet.get(i) + ", ";
             }
 
         }
-        if (i >= size ) {
-            label += alphabet.get(size );
+        if (i >= size) {
+            label += alphabet.get(size);
         }
     }
 
