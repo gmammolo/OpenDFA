@@ -6,6 +6,7 @@
 package opendfa.DFA;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  *
@@ -13,19 +14,22 @@ import java.util.ArrayList;
  */
 public class RangeChar {
 
-    protected ArrayList<Character> charList;
+    protected final ArrayList<Character> charList;
 
     public RangeChar(char[] val) {
+        charList = new ArrayList<>();
         RangeChar.this.addChar(val);
 
     }
 
     public RangeChar(ArrayList<Character> val) {
+        this.charList = new ArrayList<>();
         RangeChar.this.addChar(val);
 
     }
 
     public RangeChar(char start, char end) {
+        this.charList = new ArrayList<>();
         addChar(start, end);
     }
 
@@ -35,8 +39,7 @@ public class RangeChar {
      * @param ch
      */
     public void addChar(char[] ch) {
-        this.charList = new ArrayList<>();
-        for (char c : charList) {
+        for (char c : ch) {
             if (!this.charList.contains(c)) {
                 this.charList.add(c);
             }
@@ -44,8 +47,7 @@ public class RangeChar {
     }
 
     public void addChar(ArrayList<Character> ch) {
-        this.charList = new ArrayList<>();
-        for (char c : charList) {
+        for (char c : ch) {
             if (!this.charList.contains(c)) {
                 this.charList.add(c);
             }
@@ -120,7 +122,8 @@ public class RangeChar {
 
     /**
      * restituisce [a-zA-Z0-9]
-     * @return 
+     *
+     * @return
      */
     public static RangeChar GetFullAlphabet() {
         RangeChar result = new RangeChar('a', 'z');
@@ -128,4 +131,30 @@ public class RangeChar {
         result.addChar('0', '9');
         return result;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 73 * hash + Objects.hashCode(this.charList);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final RangeChar other = (RangeChar) obj;
+        if (!Objects.equals(this.charList, other.charList)) {
+            return false;
+        }
+        return true;
+    }
+    
 }

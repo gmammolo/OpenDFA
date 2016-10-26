@@ -1,6 +1,8 @@
 package opendfa.DFA;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Un oggetto della classe <code>Move</code> rappresenta una mossa di un automa
@@ -71,10 +73,22 @@ public class Move {
     public boolean equals(Object o) {
         if (o instanceof Move) {
             Move m = (Move) o;
-            return start == m.start && ( alphabet.equals(m.alphabet) ||  alphabet.contains(m.alphabet) );
+            Boolean contain = false;
+            for(char c : m.alphabet) {
+                if(alphabet.contains(c)) contain = true;
+            }
+            return contain &&  start == m.start ;
         } else {
             return false;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 67 * hash + this.start;
+        hash = 67 * hash + Objects.hashCode(this.alphabet);
+        return hash;
     }
 
     /**

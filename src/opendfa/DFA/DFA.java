@@ -137,7 +137,7 @@ public class DFA {
      * @return L'indice del nuovo stato creato
      */
     public int AddNewState() {
-        return numberOfStates++;
+        return ++numberOfStates;
     }
 
     /**
@@ -209,7 +209,7 @@ public class DFA {
         }
         Move found = null;
         for (Move m : transitions.keySet()) {
-            if (m.start == p && transitions.get(m)==q ) {
+            if (m.start == p && transitions.get(m) == q) {
                 found = m;
             }
         }
@@ -248,7 +248,7 @@ public class DFA {
      * @see #numberOfStates
      */
     public boolean ValidState(int p) {
-        return (p >= -1 && p < numberOfStates);
+        return (p >= -1 && p <= numberOfStates);
     }
 
     /**
@@ -309,11 +309,12 @@ public class DFA {
      */
     public int Move(int p, char ch) {
         Move move = new Move(p, ch);
-        if (transitions.containsKey(move)) {
-            return transitions.get(move);
-        } else {
-            return -1;
+        for (Entry<Move, Integer> entry : transitions.entrySet()) {
+            if (entry.getKey().equals(move)) {
+                return entry.getValue();
+            }
         }
+        return -1;
     }
 
     /**
@@ -702,7 +703,7 @@ public class DFA {
     }
 
     public Integer[] getFinalState() {
-        return (Integer[]) finalStates.toArray();
+        return  finalStates.toArray(new Integer[0]);
     }
 
     public String[] getEdgeStringify() {
