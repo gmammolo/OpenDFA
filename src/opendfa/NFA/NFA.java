@@ -1,6 +1,7 @@
 //Ultima versione pdf: http://informatica.i-learn.unito.it/file.php/1001/esercizi_24_11_2014.pdf
 package opendfa.NFA;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -23,18 +24,18 @@ public class NFA {
      * Numero degli stati dell'automa. Ogni stato e` rappresentato da un numero
      * interno non negativo, lo stato con indice 0 e` lo stato iniziale.
      */
-    private int numberOfStates;
+    private int _numberOfStates;
 
     /**
      * Insieme degli stati finali dell'automa.
      */
-    private HashSet<Integer> finalStates;
+    private HashSet<Integer> _finalStates;
 
     /**
      * Funzione di transizione dell'automa, rappresentata come una mappa da
      * mosse a insiemi di stati di arrivo.
      */
-    private HashMap<Move, HashSet<Integer>> transitions;
+    private HashMap<Move, HashSet<Integer>> _transitions;
 
     /**
      * Crea un NFA con un dato numero di stati.
@@ -42,9 +43,9 @@ public class NFA {
      * @param n Il numero di stati dell'automa.
      */
     public NFA(int n) {
-        numberOfStates = n;
-        finalStates = new HashSet<Integer>();
-        transitions = new HashMap<Move, HashSet<Integer>>();
+        _numberOfStates = n;
+        _finalStates = new HashSet<Integer>();
+        _transitions = new HashMap<Move, HashSet<Integer>>();
     }
 
     /**
@@ -53,7 +54,7 @@ public class NFA {
      * @return L'indice del nuovo stato creato
      */
     public int newState() {
-        return numberOfStates++;
+        return ++_numberOfStates;
     }
 
     /**
@@ -64,8 +65,8 @@ public class NFA {
      * altrimenti.
      */
     public boolean addFinalState(int p) {
-        if (validState(p)) {
-            finalStates.add(p);
+        if (isValidState(p)) {
+            _finalStates.add(p);
             return true;
         } else {
             return false;
@@ -78,10 +79,10 @@ public class NFA {
      * @param p Lo stato da controllare.
      * @return <code>true</code> se lo stato e` valido, <code>false</code>
      * altrimenti.
-     * @see #numberOfStates
+     * @see #_numberOfStates
      */
-    public boolean validState(int p) {
-        return (p >= 0 && p < numberOfStates);
+    public boolean isValidState(int p) {
+        return (p >= 0 && p < _numberOfStates);
     }
 
     /**
@@ -90,10 +91,10 @@ public class NFA {
      * @param p Lo stato da controllare.
      * @return <code>true</code> se lo stato e` finale, <code>false</code>
      * altrimenti.
-     * @see #finalStates
+     * @see #_finalStates
      */
-    public boolean finalState(int p) {
-        return finalStates.contains(p);
+    public boolean isFinalState(int p) {
+        return _finalStates.contains(p);
     }
 
     /**
@@ -101,8 +102,8 @@ public class NFA {
      *
      * @return Numero di stati.
      */
-    public int numberOfStates() {
-        return numberOfStates;
+    public int getNumberOfStates() {
+        return _numberOfStates;
     }
 
     /**
@@ -115,19 +116,57 @@ public class NFA {
      * sono validi, <code>false</code> altrimenti.
      */
     public boolean addMove(int p, char ch, int q) {
-        if (!validState(p) || !validState(q)) {
+        if (!isValidState(p) || !isValidState(q)) {
             return false;
         }
-        Move move = new Move(p, ch);
+        Move move = null;
+        for (Entry<Move, HashSet<Integer>> entry : _transitions.entrySet()) {
+            if (entry.getKey().start == p && (entry.getValue().contains(q) || entry.getKey().alphabet.contains(ch))) {
+                move = entry.getKey();
 
-        if (!transitions.containsKey(move)) {
+            }
+        }
+        if (move == null) {
             HashSet<Integer> arrivo = new HashSet<>();
             arrivo.add(q);
-            transitions.put(move, arrivo);
+            _transitions.put(new Move(p, ch), arrivo);
+        } else {
+            HashSet<Integer> value = _transitions.remove(move);
+            value.add(q);
+            move.addAlphabet(ch);
+            _transitions.put(move, value);
         }
-
-        transitions.get(move).add(q);
         return true;
+    }
+
+    /**
+     * Aggiunge una transizione all'automa.
+     *
+     * @param p Lo stato di partenza della transizione.
+     * @param ch Il simbolo che etichetta la transizione.
+     * @param q Lo stato di arrivo della transizione.
+     * @return <code>true</code> se lo stato di partenza e lo stato di arrivo
+     * sono validi, <code>false</code> altrimenti.
+     */
+    public boolean addMove(int p, Character[] ch, int q) {
+        boolean result = true;
+        for (char c : ch) {
+            result = addMove(p, c, q) && result;
+        }
+        return result;
+    }
+
+    /**
+     * Aggiunge una transizione all'automa.
+     *
+     * @param p Lo stato di partenza della transizione.
+     * @param ch Il simbolo che etichetta la transizione.
+     * @param q Lo stato di arrivo della transizione.
+     * @return <code>true</code> se lo stato di partenza e lo stato di arrivo
+     * sono validi, <code>false</code> altrimenti.
+     */
+    public boolean addMove(int p, ArrayList<Character> ch, int q) {
+        return addMove(p, ch.toArray(new Character[0]), q);
     }
 
     /**
@@ -136,11 +175,14 @@ public class NFA {
      * @param s L'insieme di stati da controllare.
      * @return <code>true</code> se c'e` uno stato finale in <code>s</code>,
      * <code>false</code> altrimenti.
-     * @see #finalStates
+     * @see #_finalStates
      */
-    private boolean finalState(HashSet<Integer> s) {
+    private boolean _findAFinalState(HashSet<Integer> s) {
+        if (s.size() <= 0) {
+            return false;
+        }
         for (Integer p : s) {
-            if (finalState(p)) {
+            if (isFinalState(p)) {
                 return true;
             }
         }
@@ -154,9 +196,9 @@ public class NFA {
      *
      * @return L'alfabeto dell'automa.
      */
-    public HashSet<Character> alphabet() {
+    public HashSet<Character> getAlphabet() {
         HashSet<Character> alphabet = new HashSet<Character>();
-        for (Move m : transitions.keySet()) {
+        for (Move m : _transitions.keySet()) {
             if (!m.alphabet.contains(NFA.EPSILON)) {
                 alphabet.addAll(m.alphabet);
             }
@@ -174,11 +216,12 @@ public class NFA {
      */
     public HashSet<Integer> move(int p, char ch) {
         Move move = new Move(p, ch);
-        if (transitions.containsKey(move)) {
-            return transitions.get(move);
-        } else {
-            return new HashSet<>();
+        for (Entry<Move, HashSet<Integer>> entry : _transitions.entrySet()) {
+            if (entry.getKey().start == p && entry.getKey().alphabet.contains(ch)) {
+                return entry.getValue();
+            }
         }
+        return new HashSet<>();
 
     }
 
@@ -193,11 +236,11 @@ public class NFA {
     public HashSet<Integer> move(HashSet<Integer> s, char ch) {
         HashSet<Integer> endstate = new HashSet<>();
         for (Integer p : s) {
-            Move move = new Move(p, ch);
-            if (transitions.containsKey(move)) {
-                HashSet<Integer> temp_end = transitions.get(move);
-                for (Integer end : temp_end) {
-                    endstate.add(end);
+            for (Entry<Move, HashSet<Integer>> entry : _transitions.entrySet()) {
+                if (entry.getKey().start == p && entry.getKey().alphabet.contains(ch)) {
+                    for (Integer end : entry.getValue()) {
+                        endstate.add(end);
+                    }
                 }
             }
 
@@ -214,7 +257,7 @@ public class NFA {
      * <code>s</code> per mezzo di zero o piu` epsilon transizioni.
      */
     public HashSet<Integer> epsilonClosure(HashSet<Integer> s) {
-        boolean[] r = new boolean[numberOfStates];
+        boolean[] r = new boolean[_numberOfStates];
         for (int i = 0; i < r.length; i++) {
             r[i] = s.contains(i);
         }
@@ -223,9 +266,9 @@ public class NFA {
             modificato = false;
             for (int i = 0; i < r.length; i++) {
                 if (r[i]) {
-                    for (Move m : transitions.keySet()) {
+                    for (Move m : _transitions.keySet()) {
                         if (m.start == i && m.alphabet.contains(NFA.EPSILON)) {
-                            for (int j : transitions.get(m)) {
+                            for (int j : _transitions.get(m)) {
                                 if (!r[j]) {
                                     r[j] = modificato = true;
                                 }
@@ -266,7 +309,7 @@ public class NFA {
      *
      * @return DFA equivalente.
      */
-    public DFA dfa() {
+    public DFA getEquivalentDFA() {
         // la costruzione del DFA utilizza due tabelle hash per tenere
 // traccia della corrispondenza (biunivoca) tra insiemi di
 // stati del NFA e stati del DFA
@@ -276,8 +319,8 @@ public class NFA {
                 = new HashMap<Integer, HashSet<Integer>>(); // DFA -> NFA
         DFA dfa = new DFA(0); // il DFA
         Stack<Integer> newStates = new Stack<Integer>(); // nuovi stati del DFA
-        HashSet<Character> alphabet = alphabet();
-        int q0 = dfa.AddNewState(); // stato iniziale del DFA
+        HashSet<Character> alphabet = getAlphabet();
+        int q0 = dfa.AddNewState() - 1; // stato iniziale del DFA
         indexOfSet.put(epsilonClosure(0), q0); // stati dell'NFA corrisp. a q0
         setOfIndex.put(q0, epsilonClosure(0));
         newStates.push(q0); // nuovo stato da esplorare
@@ -285,22 +328,24 @@ public class NFA {
             final int p = newStates.pop(); // ne considero uno e lo visito
             final HashSet<Integer> pset = setOfIndex.get(p); // stati del NFA corrisp.
             for (char ch : alphabet) { // considero tutte le possibili transizioni
-                HashSet<Integer> qset = epsilonClosure(move(pset, ch));
+                HashSet<Integer> tmp = move(pset, ch);
+                HashSet<Integer> qset = epsilonClosure(tmp);
                 if (indexOfSet.containsKey(qset)) { // se qset non e` nuovo...
                     final int q = indexOfSet.get(qset); // recupero il suo indice
                     dfa.SetMove(p, ch, q); // aggiungo la transizione
                 } else { // se invece qset e` nuovo
-                    final int q = dfa.AddNewState(); // creo lo stato nel DFA
+                    final int q = dfa.AddNewState() - 1; // creo lo stato nel DFA
                     indexOfSet.put(qset, q); // aggiorno la corrispondenza
                     setOfIndex.put(q, qset);
                     newStates.push(q); // q e` da visitare
                     dfa.SetMove(p, ch, q); // aggiungo la transizione
                 }
+
             }
         }
 // stabilisco gli stati finali del DFA
-        for (int p = 0; p < dfa.GetNumberOfStates(); p++) {
-            if (finalState(setOfIndex.get(p))) {
+        for (int p = 0; p < setOfIndex.size(); p++) {
+            if (_findAFinalState(setOfIndex.get(p))) {
                 dfa.AddFinalState(p);
             }
         }
@@ -308,15 +353,15 @@ public class NFA {
 
     }
 
-    public void ToDOT(String name) {
+    public void toDot(String name) {
         String text = "digraph " + name + " {\n"
                 + "rankdir=LR;\n"
                 + "node [shape = doublecircle];\n";
-        for (Integer c : finalStates) {
+        for (Integer c : _finalStates) {
             text += " q" + c + "; ";
         }
         text += "\n node [shape = circle];\n";
-        for (Entry<Move, HashSet<Integer>> entry : transitions.entrySet()) {
+        for (Entry<Move, HashSet<Integer>> entry : _transitions.entrySet()) {
             for (Integer end : entry.getValue()) {
                 text += "q" + entry.getKey().start + " -> q" + end + "[label = \"" + entry.getKey().alphabet + "\" ] \n";
             }
@@ -325,29 +370,28 @@ public class NFA {
         System.out.println(text);
     }
 
-    /*
-    NOTE: non ho trovato riferimenti su questo medoto o eventuali utilizzi
     public int append(NFA a) {
-        final int n = numberOfStates;
-        numberOfStates += a.numberOfStates();
-        for (Move m : a.transitions.keySet()) {
-            for (int q : a.transitions.get(m)) {
+        final int n = _numberOfStates;
+        _numberOfStates += a.getNumberOfStates();
+        for (Move m : a._transitions.keySet()) {
+            for (int q : a._transitions.get(m)) {
+
                 addMove(n + m.start, m.alphabet, n + q);
             }
         }
         return n;
     }
-*/
-    protected void toDOT(String name) {
+
+    private void _toDOT(String name) {
         String out = "digraph " + name + "{\n";
         out += "rankdir=LR;\n";
         out += "node [shape = doublecircle];\n";
-        for (Integer i : finalStates) {
+        for (Integer i : _finalStates) {
             out += "q" + i + ";\n";
         }
         out += "node [shape = circle];\n";
-        for (Move m : transitions.keySet()) {
-            for (int i : transitions.get(m)) {
+        for (Move m : _transitions.keySet()) {
+            for (int i : _transitions.get(m)) {
                 out += "q" + m.start + " -> q" + i + " [ label = \"" + (!m.alphabet.contains(NFA.EPSILON) ? m.alphabet : "ɛ") + "\" ];\n";
             }
         }

@@ -208,17 +208,17 @@ public class DFATest {
     }
 
     /**
-     * Test of ValidState method, of class DFA.
+     * Test of isValidState method, of class DFA.
      */
     @Test
     public void testValidState() {
         System.out.println("ValidState");
         DFA instance = new DFA(2);
-        assertEquals(true, instance.ValidState(0));
-        assertEquals(false, instance.ValidState(3));
+        assertEquals(true, instance.isValidState(0));
+        assertEquals(false, instance.isValidState(3));
         instance = new DFA(0);
-        assertEquals(true, instance.ValidState(0));
-        assertEquals(false, instance.ValidState(1));
+        assertEquals(false, instance.isValidState(0));
+        assertEquals(false, instance.isValidState(1));
     }
 
     /**
@@ -263,7 +263,7 @@ public class DFATest {
     @Test
     public void testGetAllState() {
         System.out.println("GetAllState");
-        DFA instance = new DFA(4);
+        DFA instance = new DFA(5);
         instance.AddMove(0, 's', 1);
         instance.AddMove(1, 'o', 2);
         instance.AddMove(3, 's', 4);
@@ -344,7 +344,7 @@ public class DFATest {
     public void testScan() {
         System.out.println("scan");
         String s = "sos";
-        DFA instance = new DFA(3);
+        DFA instance = new DFA(4);
         instance.AddMove(0, 's', 1);
         instance.AddMove(1, 'o', 2);
         instance.AddMove(2, 's', 3);
@@ -386,7 +386,7 @@ public class DFATest {
     @Test
     public void testGetFinalState() {
         System.out.println("getFinalState");
-        DFA instance = new DFA(2);
+        DFA instance = new DFA(3);
         instance.AddFinalState(0);
         instance.AddFinalState(2);
         Integer[] expResult = new Integer[]{0, 2};
@@ -407,5 +407,25 @@ public class DFATest {
         String[] result = instance.getEdgeStringify();
         assertArrayEquals(expResult, result);
     }
+    
+    
+    
+    /**
+     * Test of getEdgeStringify method, of class DFA.
+     */
+    @Test
+    public void testEquivalentoTo() {
+        System.out.println("equivalentTo");
+        DFA instance = new DFA(3);
+        instance.SetMove(0, 'a', 1);
+        instance.SetMove(1, 'b', 2);
+        instance.AddFinalState(2);
+        DFA result = new DFA(3);
+        result.SetMove(0, 'a', 1);
+        result.SetMove(1, 'b', 2);
+        result.AddFinalState(2);
+        assertEquals(true, result.equivalentTo(instance));
+    }
+
 
 }

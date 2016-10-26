@@ -204,7 +204,7 @@ public class DFA {
      * sono validi, <code>false</code> altrimenti.
      */
     public boolean SetMove(int p, ArrayList<Character> ch, int q) {
-        if (!ValidState(p) || !ValidState(q)) {
+        if (!isValidState(p) || !isValidState(q)) {
             return false;
         }
         Move found = null;
@@ -231,7 +231,7 @@ public class DFA {
      * altrimenti.
      */
     public boolean AddFinalState(int p) {
-        if (ValidState(p)) {
+        if (isValidState(p)) {
             finalStates.add(p);
             return true;
         } else {
@@ -247,8 +247,8 @@ public class DFA {
      * altrimenti.
      * @see #numberOfStates
      */
-    public boolean ValidState(int p) {
-        return (p >= -1 && p <= numberOfStates);
+    public boolean isValidState(int p) {
+        return (p >= -1 && p < numberOfStates);
     }
 
     /**
@@ -523,7 +523,7 @@ public class DFA {
      * ************PROBLEMI DI RAGGIUNGIBILITA'*****************
      */
     protected HashSet<Integer> reach(Integer state) {
-        if (!ValidState(state)) {
+        if (!isValidState(state)) {
             return new HashSet<Integer>();
         }
         Boolean[] res = new Boolean[numberOfStates];
@@ -538,7 +538,7 @@ public class DFA {
                     Move key = entry.getKey();
                     Integer value = entry.getValue();
 
-                    if (res[key.start] && !res[value] && ValidState(value)) {
+                    if (res[key.start] && !res[value] && isValidState(value)) {
                         res[value] = check = true;
                     }
 
@@ -589,7 +589,7 @@ public class DFA {
     }
 
     public HashMap<Integer, String> samples(Integer state) {
-        if (!ValidState(state)) {
+        if (!isValidState(state)) {
             return null;
         }
 
@@ -605,7 +605,7 @@ public class DFA {
                     Move key = entry.getKey();
                     Integer value = entry.getValue();
 
-                    if (res[key.start] != null && ValidState(value) && (res[value] == null || !res[value].contains(String.valueOf(key.alphabet)))) {
+                    if (res[key.start] != null && isValidState(value) && (res[value] == null || !res[value].contains(String.valueOf(key.alphabet)))) {
                         check = true;
                         if (res[value] == null) {
                             res[value] = "";
@@ -648,7 +648,7 @@ public class DFA {
                         for (Entry<Move, Integer> entry : transitions.entrySet()) {
                             Move key = entry.getKey();
                             //Integer value = entry.getValue();
-                            if (ValidState(Move(i, key.alphabet)) && ValidState(Move(i, key.alphabet)) && Move(i, key.alphabet) >= 0 && Move(j, key.alphabet) >= 0 && !eq[Move(i, key.alphabet)][Move(j, key.alphabet)]) {
+                            if (isValidState(Move(i, key.alphabet)) && isValidState(Move(i, key.alphabet)) && Move(i, key.alphabet) >= 0 && Move(j, key.alphabet) >= 0 && !eq[Move(i, key.alphabet)][Move(j, key.alphabet)]) {
                                 check = true;
                                 eq[i][j] = false;
                             }
@@ -698,12 +698,35 @@ public class DFA {
     public boolean equivalentTo(DFA dfa) {
         DFA minimize = this.minimize();
         DFA minimize2 = dfa.minimize();
+        return (minimize.numberOfStates == minimize2.numberOfStates && _checkFinalStatesEquals(minimize.finalStates, minimize2.finalStates) && _checkTransitionsEquals(minimize.transitions , minimize2.transitions) );
+    }
 
-        return (minimize.numberOfStates == minimize2.numberOfStates && minimize.finalStates.equals(minimize2.finalStates) && minimize.transitions.equals(minimize2.transitions));
+    private boolean _checkFinalStatesEquals(HashSet<Integer> a, HashSet<Integer> b) {
+        if (a.size() != b.size()) {
+            return false;
+        }
+        for (Integer i : a) {
+            if (!b.contains(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean _checkTransitionsEquals(HashMap<Move, Integer> a, HashMap<Move, Integer> b) {
+        if (a.size() != b.size()) {
+            return false;
+        }
+        for (Entry<Move, Integer> entry : a.entrySet()) {
+            if (!b.containsKey(entry.getKey()) && !b.containsValue(entry.getValue())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public Integer[] getFinalState() {
-        return  finalStates.toArray(new Integer[0]);
+        return finalStates.toArray(new Integer[0]);
     }
 
     public String[] getEdgeStringify() {
