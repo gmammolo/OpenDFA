@@ -22,9 +22,13 @@ public abstract class DFAModel {
         generateDFA();
     }
 
+    public DFAModel(int numState) {
+        generateDFA(numState);
+    }
+
     /**
      * Inizializza un DFA: in questo metodo andranno messi i setMove e
- addFinalState
+     * addFinalState
      */
     protected abstract void initializeDFA();
 
@@ -43,8 +47,16 @@ public abstract class DFAModel {
     }
 
     /**
+     * Genera il DFA
+     */
+    private void generateDFA(Integer numState) {
+        dfa = new DFA(numState);
+        initializeDFA();
+    }
+
+    /**
      * Imposta una move da uno stato p ad uno stato q dovuta a un carattere
- speciale
+     * speciale
      *
      * @see <code>RangeChar</code> per maggiori informazioni
      * @param p stato iniziale

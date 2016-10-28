@@ -5,6 +5,10 @@
  */
 package opendfa;
 
+import java.awt.GridLayout;
+import java.awt.Label;
+import java.util.ArrayList;
+import javax.swing.JLabel;
 import opendfa.DFA.RangeChar;
 
 /**
@@ -22,8 +26,27 @@ public class OpenDFAGUI extends javax.swing.JFrame {
         initComponents();
 
         //finalstate
-        dfa = new OpenDFA();
-        dfa.getFinalState();
+        dfa = new OpenDFA(3);
+        ArrayList<String> transictionStryngify = dfa.getEdge();
+        Edge_Panel.setLayout(new GridLayout(transictionStryngify.size()+12,1));
+        JLabel jLabel1 = new JLabel();
+        jLabel1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel1.setText("Transizioni:");
+        Edge_Panel.add(jLabel1);
+        for (String s : transictionStryngify) {
+            Edge_Panel.add(new JLabel(s));
+        }
+        
+        JLabel jLabel2 = new JLabel();
+        jLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel2.setText("Stati Finali:");
+        FinalState_Panel.add(jLabel2);
+        Integer[] finalState = dfa.getFinalStates();
+        FinalState_Panel.setLayout(new GridLayout(finalState.length+5,1));
+        for( Integer i : finalState) {
+            FinalState_Panel.add(new JLabel("q"+i));
+        }
+
     }
 
     /**
@@ -35,9 +58,9 @@ public class OpenDFAGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        Edge_Panel = new javax.swing.JTextField();
-        EndPoint_Panel = new javax.swing.JTextField();
         Content_Panel = new javax.swing.JTabbedPane();
+        Edge_Panel = new javax.swing.JPanel();
+        FinalState_Panel = new javax.swing.JPanel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -55,19 +78,26 @@ public class OpenDFAGUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        Edge_Panel.setEditable(false);
-        Edge_Panel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        EndPoint_Panel.setEditable(false);
-        EndPoint_Panel.setText("jTextField1");
-        EndPoint_Panel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        EndPoint_Panel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EndPoint_PanelActionPerformed(evt);
-            }
-        });
-
         Content_Panel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        Edge_Panel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Edge_Panel.setAutoscrolls(true);
+        Edge_Panel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        Edge_Panel.setLayout(new java.awt.GridLayout(15, 1));
+
+        FinalState_Panel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        FinalState_Panel.setAutoscrolls(true);
+
+        javax.swing.GroupLayout FinalState_PanelLayout = new javax.swing.GroupLayout(FinalState_Panel);
+        FinalState_Panel.setLayout(FinalState_PanelLayout);
+        FinalState_PanelLayout.setHorizontalGroup(
+            FinalState_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 155, Short.MAX_VALUE)
+        );
+        FinalState_PanelLayout.setVerticalGroup(
+            FinalState_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 146, Short.MAX_VALUE)
+        );
 
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
@@ -138,11 +168,11 @@ public class OpenDFAGUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(Edge_Panel)
-                    .addComponent(EndPoint_Panel, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Edge_Panel, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(FinalState_Panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Content_Panel, javax.swing.GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
+                .addComponent(Content_Panel, javax.swing.GroupLayout.DEFAULT_SIZE, 548, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -151,13 +181,12 @@ public class OpenDFAGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(Content_Panel, javax.swing.GroupLayout.PREFERRED_SIZE, 435, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE))
+                        .addComponent(Content_Panel)
+                        .addGap(40, 40, 40))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(Edge_Panel)
+                        .addComponent(Edge_Panel, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(EndPoint_Panel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addComponent(FinalState_Panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
 
         pack();
@@ -166,9 +195,6 @@ public class OpenDFAGUI extends javax.swing.JFrame {
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
         System.exit(0);
     }//GEN-LAST:event_exitMenuItemActionPerformed
-
-    private void EndPoint_PanelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EndPoint_PanelActionPerformed
-    }//GEN-LAST:event_EndPoint_PanelActionPerformed
 
     /**
      * @param args the command line arguments
@@ -207,8 +233,8 @@ public class OpenDFAGUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTabbedPane Content_Panel;
-    private javax.swing.JTextField Edge_Panel;
-    private javax.swing.JTextField EndPoint_Panel;
+    private javax.swing.JPanel Edge_Panel;
+    private javax.swing.JPanel FinalState_Panel;
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JMenuItem contentsMenuItem;
     private javax.swing.JMenuItem copyMenuItem;
@@ -235,100 +261,32 @@ public class OpenDFAGUI extends javax.swing.JFrame {
 
     private class OpenDFA extends DFAModel {
 
-        private int numstate;
+        private int numState;
 
         @Override
         protected void initializeDFA() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            setMove(0, 'a', 1);
+            setMove(1, 'b', 2);
+
+            addFinalState(2);
         }
 
         @Override
         protected int numState() {
-            return this.numstate;
+            return this.numState;
         }
 
-        public OpenDFA() {
-            numstate = 0;
+        public OpenDFA(int numState) {
+            super(numState);
+
         }
 
-        protected Boolean checkState(Integer newState) {
-            if (newState < -1) {
-                throw new IllegalArgumentException("Non possono esistere stati negativi");
-            }
-            if (newState > this.numState()) {
-                this.numstate = newState;
-            }
-            return true;
-        }
-
-        @Override
-        protected void setMove(Integer p, RangeChar g, Integer q) {
-            checkState(p);
-            checkState(q);
-            super.setMove(p, g, q);
-        }
-
-        /**
-         * Imposta una move da uno stato p ad uno stato q dovuta a un carattere
- ch
-         *
-         * @param p stato iniziale
-         * @param ch carattere
-         * @param q stato finale
-         */
-        @Override
-        protected void setMove(Integer p, char ch, Integer q) {
-            checkState(p);
-            checkState(q);
-            super.setMove(p, ch, q);
-        }
-
-        /**
-         * Imposta una move da uno stato p ad uno stato q per un range di valori
-         *
-         * @param p stato iniziale
-         * @param start inizio del range di valori
-         * @param end fine del range di valori
-         * @param q stato finale
-         */
-        @Override
-        protected void setMove(Integer p, char start, char end, Integer q) {
-            checkState(p);
-            checkState(q);
-            super.setMove(p, start, end, q);
-        }
-
-        /**
-         *
-         * @param p stato iniziale
-         * @param ch array di char contente la serie di caratteri che permettono
-         * il movimento
-         * @param q stato finale
-         */
-        @Override
-        protected void setMove(Integer p, char[] ch, Integer q) {
-            for (Character a : ch) {
-                setMove(p, a, q);
-            }
-        }
-
-        /**
-         * Aggiunge un nuovo stato finale al DFA
-         *
-         * @param p stato finale
-         */
-        @Override
-        protected void addFinalState(Integer p) {
-            checkState(p);
-            super.addFinalState(p);
-        }
-
-        public Integer[] getFinalState() {
-            return this.dfa.getFinalState();
-        }
-
-        public String[] getEdge() {
+        public ArrayList<String> getEdge() {
             return this.dfa.getEdgeStringify();
+        }
+
+        private Integer[] getFinalStates() {
+            return this.dfa.getFinalState();
         }
     }
 

@@ -366,12 +366,12 @@ public class DFATest {
     @Test
     public void testGetEdgeStringify() {
         System.out.println("getEdgeStringify");
-        DFA instance = new DFA(2);
+        DFA instance = new DFA(3);
         instance.setMove(0, 'a', 1);
         instance.setMove(1, 'b', 2);
-        String[] expResult = new String[]{"0 => 1 [a]", "1 =>b [b]"};
-        String[] result = instance.getEdgeStringify();
-        assertArrayEquals(expResult, result);
+        ArrayList<String> expResult =new ArrayList<>(Arrays.asList("q0 =[a]=> q1", "q1 =[b]=> q2"));
+        ArrayList<String>result = instance.getEdgeStringify();
+        assertArrayEquals(expResult.toArray(), result.toArray());
     }
     
     

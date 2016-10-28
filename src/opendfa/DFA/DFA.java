@@ -386,18 +386,14 @@ public class DFA {
             String[] args = {DOT, "-Tpng", "-Gdpi=" + _dpiSizes[this._currentDpiPos], dotFIleUrl, "-o", OutputDir + Name + ".png"};
             Process p = rt.exec(args);
             p.waitFor();
-        } catch (IOException ex) {
-            Logger.getLogger(DFA.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InterruptedException ex) {
+        } catch (IOException | InterruptedException ex) {
             Logger.getLogger(DFA.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     private void _writeToFile(String filename, String context) {
-        try {
-            PrintWriter out = new PrintWriter(filename);
+        try (PrintWriter out = new PrintWriter(filename)) {
             out.println(context);
-            out.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(DFA.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -418,6 +414,7 @@ public class DFA {
      * l'automa.
      *
      * @param name Nome della classe da generare.
+     * @param OutputDir
      */
     public void toJava(String name, String OutputDir) {
         String s = "public class " + name + " {\n"
@@ -473,7 +470,8 @@ public class DFA {
     }
 
     /**
-     * Riordina le Mosse per stato iniziale 
+     * Riordina le Mosse per stato iniziale
+     *
      * @return La lista delle mosse ordinate
      */
     private ArrayList<Move> _orderByInitialState() {
@@ -485,11 +483,15 @@ public class DFA {
     }
 
     /**
-     * ************PROBLEMI DI RAGGIUNGIBILITA'*****************
+     * ************PROBLEMI DI RAGGIUNGIBILITA'
+     *
+     *****************
+     * @param state
+     * @return
      */
     protected HashSet<Integer> _reach(Integer state) {
         if (!isValidState(state)) {
-            return new HashSet<Integer>();
+            return new HashSet<>();
         }
         Boolean[] res = new Boolean[_numberOfStates];
         for (int i = 0; i < _numberOfStates; i++) {
@@ -534,9 +536,10 @@ public class DFA {
 
     /**
      *
+     * @return
      */
     public HashSet<Integer> sink() {
-        HashSet<Integer> result = new HashSet<Integer>();
+        HashSet<Integer> result = new HashSet<>();
         HashSet<Integer> AllStates = getAllState();
         for (Integer state : AllStates) {
             HashSet<Integer> tree = _reach(state);
@@ -704,8 +707,13 @@ public class DFA {
         return _finalStates.toArray(new Integer[0]);
     }
 
-    public String[] getEdgeStringify() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public ArrayList<String> getEdgeStringify() {
+       ArrayList<Move> moves = this._orderByInitialState();
+       ArrayList<String> result = new ArrayList<>();
+       for(Move move : moves) {
+          result.add("q"+move.start + " =["+move.label+"]=> q"+_transitions.get(move)  );
+       } 
+       return result;
     }
 
 }
