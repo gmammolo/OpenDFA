@@ -13,7 +13,7 @@ import opendfa.DFA.RangeChar;
  */
 public class OpenDFAGUI extends javax.swing.JFrame {
 
-    private OpenDFA dfa;
+    private final OpenDFA dfa;
 
     /**
      * Creates new form OpenDFAGUI
@@ -238,12 +238,12 @@ public class OpenDFAGUI extends javax.swing.JFrame {
         private int numstate;
 
         @Override
-        protected void InitializeDFA() {
+        protected void initializeDFA() {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        protected int NumState() {
+        protected int numState() {
             return this.numstate;
         }
 
@@ -255,21 +255,21 @@ public class OpenDFAGUI extends javax.swing.JFrame {
             if (newState < -1) {
                 throw new IllegalArgumentException("Non possono esistere stati negativi");
             }
-            if (newState > this.NumState()) {
+            if (newState > this.numState()) {
                 this.numstate = newState;
             }
             return true;
         }
 
         @Override
-        protected void SetMove(Integer p, RangeChar g, Integer q) {
+        protected void setMove(Integer p, RangeChar g, Integer q) {
             checkState(p);
             checkState(q);
-            super.SetMove(p, g, q);
+            super.setMove(p, g, q);
         }
 
         /**
-         * Imposta una Move da uno stato p ad uno stato q dovuta a un carattere
+         * Imposta una move da uno stato p ad uno stato q dovuta a un carattere
  ch
          *
          * @param p stato iniziale
@@ -277,14 +277,14 @@ public class OpenDFAGUI extends javax.swing.JFrame {
          * @param q stato finale
          */
         @Override
-        protected void SetMove(Integer p, char ch, Integer q) {
+        protected void setMove(Integer p, char ch, Integer q) {
             checkState(p);
             checkState(q);
-            super.SetMove(p, ch, q);
+            super.setMove(p, ch, q);
         }
 
         /**
-         * Imposta una Move da uno stato p ad uno stato q per un range di valori
+         * Imposta una move da uno stato p ad uno stato q per un range di valori
          *
          * @param p stato iniziale
          * @param start inizio del range di valori
@@ -292,10 +292,10 @@ public class OpenDFAGUI extends javax.swing.JFrame {
          * @param q stato finale
          */
         @Override
-        protected void SetMove(Integer p, char start, char end, Integer q) {
+        protected void setMove(Integer p, char start, char end, Integer q) {
             checkState(p);
             checkState(q);
-            super.SetMove(p, start, end, q);
+            super.setMove(p, start, end, q);
         }
 
         /**
@@ -306,9 +306,9 @@ public class OpenDFAGUI extends javax.swing.JFrame {
          * @param q stato finale
          */
         @Override
-        protected void SetMove(Integer p, char[] ch, Integer q) {
+        protected void setMove(Integer p, char[] ch, Integer q) {
             for (Character a : ch) {
-                SetMove(p, a, q);
+                setMove(p, a, q);
             }
         }
 
@@ -318,9 +318,9 @@ public class OpenDFAGUI extends javax.swing.JFrame {
          * @param p stato finale
          */
         @Override
-        protected void AddFinalState(Integer p) {
+        protected void addFinalState(Integer p) {
             checkState(p);
-            super.AddFinalState(p);
+            super.addFinalState(p);
         }
 
         public Integer[] getFinalState() {

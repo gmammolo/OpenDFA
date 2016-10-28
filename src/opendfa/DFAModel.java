@@ -19,55 +19,55 @@ public abstract class DFAModel {
     protected DFA dfa;
 
     public DFAModel() {
-        GenerateDFA();
+        generateDFA();
     }
 
     /**
-     * Inizializza un DFA: in questo metodo andranno messi i SetMove e
-     * AddFinalState
+     * Inizializza un DFA: in questo metodo andranno messi i setMove e
+ addFinalState
      */
-    protected abstract void InitializeDFA();
+    protected abstract void initializeDFA();
 
     /**
      *
      * @return numero di stati presenti nel DFA
      */
-    protected abstract int NumState();
+    protected abstract int numState();
 
     /**
      * Genera il DFA
      */
-    private void GenerateDFA() {
-        dfa = new DFA(NumState());
-        InitializeDFA();
+    private void generateDFA() {
+        dfa = new DFA(numState());
+        initializeDFA();
     }
 
     /**
-     * Imposta una Move da uno stato p ad uno stato q dovuta a un carattere
-     * speciale
+     * Imposta una move da uno stato p ad uno stato q dovuta a un carattere
+ speciale
      *
      * @see <code>RangeChar</code> per maggiori informazioni
      * @param p stato iniziale
      * @param g carattere
      * @param q stato finale
      */
-    protected void SetMove(Integer p, RangeChar g, Integer q) {
-        dfa.SetMove(p, g.getCharacters(), q);
+    protected void setMove(Integer p, RangeChar g, Integer q) {
+        dfa.setMove(p, g.getCharacters(), q);
     }
 
     /**
-     * Imposta una Move da uno stato p ad uno stato q dovuta a un carattere ch
+     * Imposta una move da uno stato p ad uno stato q dovuta a un carattere ch
      *
      * @param p stato iniziale
      * @param ch carattere
      * @param q stato finale
      */
-    protected void SetMove(Integer p, char ch, Integer q) {
-        dfa.SetMove(p, ch, q);
+    protected void setMove(Integer p, char ch, Integer q) {
+        dfa.setMove(p, ch, q);
     }
 
     /**
-     * Imposta una Move da uno stato p ad uno stato q per un range di valori
+     * Imposta una move da uno stato p ad uno stato q per un range di valori
      *
      * @param p stato iniziale
      * @param start inizio del range di valori
@@ -75,10 +75,10 @@ public abstract class DFAModel {
      * @param q stato finale
      * @deprecated
      * @see
-     * <code>protected void SetMove(Integer p, RangeChar g, Integer q)</code>
+     * <code>protected void setMove(Integer p, RangeChar g, Integer q)</code>
      */
-    protected void SetMove(Integer p, char start, char end, Integer q) {
-        dfa.SetMove(p, start, end, q);
+    protected void setMove(Integer p, char start, char end, Integer q) {
+        dfa.setMove(p, start, end, q);
     }
 
     /**
@@ -89,10 +89,10 @@ public abstract class DFAModel {
      * @param q stato finale
      * @deprecated
      * @see
-     * <code>protected void SetMove(Integer p, RangeChar g, Integer q)</code>
+     * <code>protected void setMove(Integer p, RangeChar g, Integer q)</code>
      */
-    protected void SetMove(Integer p, char[] ch, Integer q) {
-        dfa.SetMove(p, ch, q);
+    protected void setMove(Integer p, char[] ch, Integer q) {
+        dfa.setMove(p, ch, q);
     }
 
     /**
@@ -103,10 +103,10 @@ public abstract class DFAModel {
      * @param q stato finale
      * @deprecated
      * @see
-     * <code>protected void SetMove(Integer p, RangeChar g, Integer q)</code>
+     * <code>protected void setMove(Integer p, RangeChar g, Integer q)</code>
      */
-    protected void SetMove(Integer p, ArrayList<Character> ch, Integer q) {
-        dfa.SetMove(p, ch, q);
+    protected void setMove(Integer p, ArrayList<Character> ch, Integer q) {
+        dfa.setMove(p, ch, q);
     }
 
     /**
@@ -114,8 +114,8 @@ public abstract class DFAModel {
      *
      * @param p stato finale
      */
-    protected void AddFinalState(Integer p) {
-        dfa.AddFinalState(p);
+    protected void addFinalState(Integer p) {
+        dfa.addFinalState(p);
     }
 
     /**
@@ -124,7 +124,7 @@ public abstract class DFAModel {
      * @param name node nel grafo
      *
      */
-    public void ToDot(String name) {
+    public void toDot(String name) {
         dfa.toDOT(name);
     }
 
@@ -134,7 +134,7 @@ public abstract class DFAModel {
      * @param name node nel grafo
      * @param outputDir URL della directory di output
      */
-    public void ToDot(String name, String outputDir) {
+    public void toDot(String name, String outputDir) {
         dfa.toDOT(name, outputDir);
     }
 
@@ -143,7 +143,7 @@ public abstract class DFAModel {
      *
      * @param name node nel grafo
      */
-    public void ToPng(String name) {
+    public void toPng(String name) {
         dfa.toPNG(name);
     }
 
@@ -162,7 +162,7 @@ public abstract class DFAModel {
      *
      * @param s nome della classe java
      */
-    public void ToJava(String s) {
+    public void toJava(String s) {
         dfa.toJava(s);
     }
 
@@ -173,7 +173,7 @@ public abstract class DFAModel {
      * @param outputDir URL della directory di output
      *
      */
-    public void ToJava(String s, String outputDir) {
+    public void toJava(String s, String outputDir) {
         dfa.toJava(s, outputDir);
     }
 
@@ -184,7 +184,7 @@ public abstract class DFAModel {
      * @return <code>true</code> se la stringa e` stata riconosciuta,
      * <code>false</code> altrimenti.
      */
-    public boolean Scan(String line) {
+    public boolean scan(String line) {
         return dfa.scan(line);
     }
 

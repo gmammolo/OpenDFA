@@ -42,14 +42,14 @@ public class DFATest {
     }
 
     /**
-     * Test of IncreaseDpi method, of class DFA.
+     * Test of increaseDpi method, of class DFA.
      */
     @Test
     public void testIncreaseDpi() {
         System.out.println("IncreaseDpi");
         DFA instance = new DFA(0);
         int expResult = 106;
-        instance.IncreaseDpi();
+        instance.increaseDpi();
         assertEquals(expResult, instance.getImageDpi());
     }
 
@@ -78,7 +78,7 @@ public class DFATest {
     }
 
     /**
-     * Test of AddMove method, of class DFA.
+     * Test of addMove method, of class DFA.
      */
     @Test
     public void testAddMove() {
@@ -87,26 +87,26 @@ public class DFATest {
         char ch = 'a';
         int q = 1;
         DFA instance = new DFA(2);
-        boolean result = instance.AddMove(p, ch, q);
+        boolean result = instance.addMove(p, ch, q);
         assertEquals(true, result);
-        assertEquals(1, instance.Move(p, ch));
-        assertEquals(-1, instance.Move(p, 'd'));
+        assertEquals(1, instance.move(p, ch));
+        assertEquals(-1, instance.move(p, 'd'));
     }
 
     /**
-     * Test of AddNewState method, of class DFA.
+     * Test of addNewState method, of class DFA.
      */
     @Test
     public void testAddNewState() {
         System.out.println("AddNewState");
         DFA instance = new DFA(2);
         int expResult = 3;
-        int result = instance.AddNewState();
+        int result = instance.addNewState();
         assertEquals(expResult, result);
     }
 
     /**
-     * Test of SetMove method, of class DFA.
+     * Test of setMove method, of class DFA.
      */
     @Test
     public void testSetMove_4args() {
@@ -117,16 +117,16 @@ public class DFATest {
         int q = 1;
         DFA instance = new DFA(2);
         boolean expResult = true;
-        boolean result = instance.SetMove(p, start, end, q);
+        boolean result = instance.setMove(p, start, end, q);
         assertEquals(expResult, result);
-        assertEquals(q, instance.Move(p, 'a'));
-        assertEquals(q, instance.Move(p, 'b'));
-        assertEquals(q, instance.Move(p, 'c'));
-        assertEquals(-1, instance.Move(p, 'd'));
+        assertEquals(q, instance.move(p, 'a'));
+        assertEquals(q, instance.move(p, 'b'));
+        assertEquals(q, instance.move(p, 'c'));
+        assertEquals(-1, instance.move(p, 'd'));
     }
 
     /**
-     * Test of SetMove method, of class DFA.
+     * Test of setMove method, of class DFA.
      */
     @Test
     public void testSetMove_3args_1() {
@@ -136,14 +136,14 @@ public class DFATest {
         int q = 1;
         DFA instance = new DFA(2);
         boolean expResult = true;
-        boolean result = instance.SetMove(p, ch, q);
+        boolean result = instance.setMove(p, ch, q);
         assertEquals(expResult, result);
-        assertEquals(q, instance.Move(p, 'a'));
-        assertEquals(-1, instance.Move(p, 'b'));
+        assertEquals(q, instance.move(p, 'a'));
+        assertEquals(-1, instance.move(p, 'b'));
     }
 
     /**
-     * Test of SetMove method, of class DFA.
+     * Test of setMove method, of class DFA.
      */
     @Test
     public void testSetMove_3args_2() {
@@ -153,15 +153,15 @@ public class DFATest {
         int q = 1;
         DFA instance = new DFA(2);
         boolean expResult = true;
-        boolean result = instance.SetMove(p, ch, q);
+        boolean result = instance.setMove(p, ch, q);
         assertEquals(expResult, result);
-        assertEquals(q, instance.Move(p, 'a'));
-        assertEquals(q, instance.Move(p, 'b'));
-        assertEquals(-1, instance.Move(p, 'c'));
+        assertEquals(q, instance.move(p, 'a'));
+        assertEquals(q, instance.move(p, 'b'));
+        assertEquals(-1, instance.move(p, 'c'));
     }
 
     /**
-     * Test of SetMove method, of class DFA.
+     * Test of setMove method, of class DFA.
      */
     @Test
     public void testSetMove_3args_3() {
@@ -171,15 +171,15 @@ public class DFATest {
         int q = 1;
         DFA instance = new DFA(2);
         boolean expResult = true;
-        boolean result = instance.SetMove(p, ch, q);
+        boolean result = instance.setMove(p, ch, q);
         assertEquals(expResult, result);
-        assertEquals(q, instance.Move(p, 'a'));
-        assertEquals(q, instance.Move(p, 'b'));
-        assertEquals(-1, instance.Move(p, 'c'));
+        assertEquals(q, instance.move(p, 'a'));
+        assertEquals(q, instance.move(p, 'b'));
+        assertEquals(-1, instance.move(p, 'c'));
     }
 
     /**
-     * Test of AddFinalState method, of class DFA.
+     * Test of addFinalState method, of class DFA.
      */
     @Test
     public void testAddFinalState() {
@@ -187,22 +187,22 @@ public class DFATest {
         int p = 0;
         DFA instance = new DFA(2);
         boolean expResult = true;
-        boolean result = instance.AddFinalState(p);
+        boolean result = instance.addFinalState(p);
         assertEquals(expResult, result);
         assertArrayEquals(new Integer[]{0}, instance.getFinalState());
     }
 
     /**
-     * Test of AddFinalState method, of class DFA.
+     * Test of addFinalState method, of class DFA.
      */
     @Test
     public void testAddFinalState2() {
         System.out.println("AddFinalState 2");
         DFA instance = new DFA(3);
         boolean expResult = true;
-        boolean result = instance.AddFinalState(1);
+        boolean result = instance.addFinalState(1);
         assertEquals(expResult, result);
-        result = instance.AddFinalState(2);
+        result = instance.addFinalState(2);
         assertEquals(expResult, result);
         assertArrayEquals(new Integer[]{1, 2}, instance.getFinalState());
     }
@@ -222,74 +222,74 @@ public class DFATest {
     }
 
     /**
-     * Test of IsFinalState method, of class DFA.
+     * Test of isFinalState method, of class DFA.
      */
     @Test
     public void testIsFinalState() {
         System.out.println("IsFinalState");
         DFA instance = new DFA(3);
-        instance.AddFinalState(0);
-        assertEquals(true, instance.IsFinalState(0));
-        assertEquals(false, instance.IsFinalState(1));
+        instance.addFinalState(0);
+        assertEquals(true, instance.isFinalState(0));
+        assertEquals(false, instance.isFinalState(1));
     }
 
     /**
-     * Test of GetNumberOfStates method, of class DFA.
+     * Test of getNumberOfStates method, of class DFA.
      */
     @Test
     public void testGetNumberOfStates() {
         System.out.println("GetNumberOfStates");
         DFA instance = new DFA(0);
         int expResult = 0;
-        int result = instance.GetNumberOfStates();
+        int result = instance.getNumberOfStates();
         assertEquals(expResult, result);
     }
 
     /**
-     * Test of GetNumberOfStates method, of class DFA.
+     * Test of getNumberOfStates method, of class DFA.
      */
     @Test
     public void testGetNumberOfStates2() {
         System.out.println("GetNumberOfStates 2");
         DFA instance = new DFA(3);
         int expResult = 3;
-        int result = instance.GetNumberOfStates();
+        int result = instance.getNumberOfStates();
         assertEquals(expResult, result);
     }
 
     /**
-     * Test of GetAllState method, of class DFA.
+     * Test of getAllState method, of class DFA.
      */
     @Test
     public void testGetAllState() {
         System.out.println("GetAllState");
         DFA instance = new DFA(5);
-        instance.AddMove(0, 's', 1);
-        instance.AddMove(1, 'o', 2);
-        instance.AddMove(3, 's', 4);
+        instance.addMove(0, 's', 1);
+        instance.addMove(1, 'o', 2);
+        instance.addMove(3, 's', 4);
         HashSet<Integer> expResult = new HashSet<>(Arrays.asList(0, 1, 2, 3, 4));
-        HashSet<Integer> result = instance.GetAllState();
+        HashSet<Integer> result = instance.getAllState();
         assertEquals(expResult, result);
     }
 
     /**
-     * Test of GetAlphabet method, of class DFA.
+     * Test of getAlphabet method, of class DFA.
      */
     @Test
     public void testGetAlphabet() {
         System.out.println("GetAlphabet");
         DFA instance = new DFA(3);
-        instance.AddMove(0, '0', 1);
-        instance.AddMove(0, '1', 2);
-        instance.AddMove(1, 'a', 1);
-        instance.AddMove(1, '0', 0);
+        instance.addMove(0, '0', 1);
+        instance.addMove(0, '1', 2);
+        instance.addMove(1, 'a', 1);
+        instance.addMove(1, '0', 0);
         HashSet<Character> expResult = new HashSet<>(Arrays.asList('0', '1', 'a'));
-        HashSet<Character> result = instance.GetAlphabet();
+        HashSet<Character> result = instance.getAlphabet();
         assertEquals(expResult, result);
     }
 
     /**
-     * Test of Move method, of class DFA.
+     * Test of move method, of class DFA.
      */
     @Test
     public void testMove_int_char() {
@@ -298,42 +298,8 @@ public class DFATest {
         char ch = 'a';
         int expResult = 1;
         DFA instance = new DFA(2);
-        instance.AddMove(p, ch, expResult);
-        int result = instance.Move(p, ch);
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of Move method, of class DFA.
-     */
-    @Test
-    public void testMove_int_charArr() {
-        System.out.println("Move");
-        int p = 0;
-        char[] ch = new char[]{'a', 'b'};
-        DFA instance = new DFA(2);
-        int expResult = 1;
-        for (char c : ch) {
-            instance.AddMove(p, c, expResult);
-        }
-        int result = instance.Move(p, ch);
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of Move method, of class DFA.
-     */
-    @Test
-    public void testMove_int_ArrayList() {
-        System.out.println("Move");
-        int p = 0;
-        ArrayList<Character> ch = new ArrayList<>(Arrays.asList('a', 'b'));
-        DFA instance = new DFA(2);
-        int expResult = 1;
-        for (char c : ch) {
-            instance.AddMove(p, c, expResult);
-        }
-        int result = instance.Move(p, ch);
+        instance.addMove(p, ch, expResult);
+        int result = instance.move(p, ch);
         assertEquals(expResult, result);
     }
 
@@ -345,10 +311,10 @@ public class DFATest {
         System.out.println("scan");
         String s = "sos";
         DFA instance = new DFA(4);
-        instance.AddMove(0, 's', 1);
-        instance.AddMove(1, 'o', 2);
-        instance.AddMove(2, 's', 3);
-        instance.AddFinalState(3);
+        instance.addMove(0, 's', 1);
+        instance.addMove(1, 'o', 2);
+        instance.addMove(2, 's', 3);
+        instance.addFinalState(3);
         boolean expResult = true;
         boolean result = instance.scan(s);
         assertEquals(expResult, result);
@@ -361,7 +327,7 @@ public class DFATest {
     public void testEmpty() {
         System.out.println("empty");
         DFA instance = new DFA(3);
-        instance.AddFinalState(0);
+        instance.addFinalState(0);
         boolean expResult = true;
         boolean result = instance.empty();
         assertEquals(expResult, result);
@@ -387,8 +353,8 @@ public class DFATest {
     public void testGetFinalState() {
         System.out.println("getFinalState");
         DFA instance = new DFA(3);
-        instance.AddFinalState(0);
-        instance.AddFinalState(2);
+        instance.addFinalState(0);
+        instance.addFinalState(2);
         Integer[] expResult = new Integer[]{0, 2};
         Integer[] result = instance.getFinalState();
         assertArrayEquals(expResult, result);
@@ -401,8 +367,8 @@ public class DFATest {
     public void testGetEdgeStringify() {
         System.out.println("getEdgeStringify");
         DFA instance = new DFA(2);
-        instance.SetMove(0, 'a', 1);
-        instance.SetMove(1, 'b', 2);
+        instance.setMove(0, 'a', 1);
+        instance.setMove(1, 'b', 2);
         String[] expResult = new String[]{"0 => 1 [a]", "1 =>b [b]"};
         String[] result = instance.getEdgeStringify();
         assertArrayEquals(expResult, result);
@@ -410,22 +376,90 @@ public class DFATest {
     
     
     
+        /**
+     * Test of minimize method, of class DFA.
+     */
+    @Test
+    public void testMinimize() {
+        System.out.println("minimize");
+        DFA instance = new DFA(7);
+        instance.setMove(0, '0', 1);
+        instance.setMove(0, '1', 3);
+        instance.setMove(1, '0', 1);
+        instance.setMove(1, '1', 2);
+        instance.setMove(2, '0', 3);
+        instance.setMove(2, '1', 4);
+        instance.setMove(3, '0', 3);
+        instance.setMove(3, '1', 4);
+        instance.setMove(4, '0', 1);
+        instance.setMove(4, '1', 2);
+        instance.setMove(5, '0', 2);
+        instance.setMove(5, '1', 6);
+        instance.setMove(6, '0', 5);
+        instance.setMove(6, '1', 4);
+        instance.addFinalState(2);
+        instance.addFinalState(4);
+        DFA result = new DFA(3);
+        result.setMove(0, '0', 1);
+        result.setMove(0, '1', 1);
+        result.setMove(1, '0', 1);
+        result.setMove(1, '1', 2);
+        result.setMove(2, '0', 1);
+        result.setMove(2, '1', 2);
+        result.addFinalState(2);
+        assertEquals(true, result.equivalentTo(instance.minimize()));
+    }
+
+            /**
+     * Test of minimize method, of class DFA.
+     */
+    @Test
+    public void testMinimize2() {
+        System.out.println("minimize");
+        DFA result = new DFA(3);
+        result.setMove(0, '0', 1);
+        result.setMove(0, '1', 1);
+        result.setMove(1, '0', 1);
+        result.setMove(1, '1', 2);
+        result.setMove(2, '0', 1);
+        result.setMove(2, '1', 2);
+        result.addFinalState(2);
+        assertEquals(true, result.equivalentTo(result.minimize()));
+    }
+
+
     /**
-     * Test of getEdgeStringify method, of class DFA.
+     * Test of equivalentTo method, of class DFA.
      */
     @Test
     public void testEquivalentoTo() {
         System.out.println("equivalentTo");
-        DFA instance = new DFA(3);
-        instance.SetMove(0, 'a', 1);
-        instance.SetMove(1, 'b', 2);
-        instance.AddFinalState(2);
+        DFA instance = new DFA(7);
+        instance.setMove(0, '0', 1);
+        instance.setMove(0, '1', 3);
+        instance.setMove(1, '0', 1);
+        instance.setMove(1, '1', 2);
+        instance.setMove(2, '0', 3);
+        instance.setMove(2, '1', 4);
+        instance.setMove(3, '0', 3);
+        instance.setMove(3, '1', 4);
+        instance.setMove(4, '0', 1);
+        instance.setMove(4, '1', 2);
+        instance.setMove(5, '0', 2);
+        instance.setMove(5, '1', 6);
+        instance.setMove(6, '0', 5);
+        instance.setMove(6, '1', 4);
+        instance.addFinalState(2);
+        instance.addFinalState(4);
         DFA result = new DFA(3);
-        result.SetMove(0, 'a', 1);
-        result.SetMove(1, 'b', 2);
-        result.AddFinalState(2);
-        assertEquals(true, result.equivalentTo(instance));
+        result.setMove(0, '0', 1);
+        result.setMove(0, '1', 1);
+        result.setMove(1, '0', 1);
+        result.setMove(1, '1', 2);
+        result.setMove(2, '0', 1);
+        result.setMove(2, '1', 2);
+        result.addFinalState(2);
+        assertEquals(true, instance.equivalentTo(result));
     }
-
 
 }

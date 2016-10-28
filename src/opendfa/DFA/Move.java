@@ -27,6 +27,23 @@ public class Move {
      * @param start Lo stato di partenza.
      * @param ch Il simbolo che etichetta la transizione.
      */
+    public Move(int start, Character[] ch) {
+        this.start = start;
+        this.alphabet = new ArrayList<>();
+        for (char c : ch) {
+            if (!this.alphabet.contains(c)) {
+                this.alphabet.add(c);
+            }
+        }
+        _regenerateLabel();
+    }
+
+    /**
+     * Crea una mossa con stato di partenza e simbolo dati.
+     *
+     * @param start Lo stato di partenza.
+     * @param ch Il simbolo che etichetta la transizione.
+     */
     public Move(int start, char[] ch) {
         this.start = start;
         this.alphabet = new ArrayList<>();
@@ -76,20 +93,22 @@ public class Move {
      *
      * @param o La mossa da confrontare a questa.
      * @return <code>true</code> se le due mosse sono uguali, ovvero hanno lo
-     * stesso stato di partenza e lo stesso simbolo, <code>false</code>
+     * stesso stato di partenza e gli stessi simboli, <code>false</code>
      * altrimenti.
      */
     @Override
     public boolean equals(Object o) {
         if (o instanceof Move) {
             Move m = (Move) o;
-            Boolean contain = false;
-            for (char c : m.alphabet) {
-                if (alphabet.contains(c)) {
-                    contain = true;
+            Boolean contain = m.alphabet.size() == alphabet.size() && start == m.start;
+            if (contain) {
+                for (char c : m.alphabet) {
+                    if (!alphabet.contains(c)) {
+                        return false;
+                    }
                 }
             }
-            return contain && start == m.start;
+            return contain ;
         } else {
             return false;
         }
@@ -112,7 +131,6 @@ public class Move {
         if (!this.alphabet.contains(c)) {
             this.alphabet.add(c);
         }
-        this.alphabet.add(c);
         _regenerateLabel();
     }
 

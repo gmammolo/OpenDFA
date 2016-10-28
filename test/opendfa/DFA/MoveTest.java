@@ -82,7 +82,7 @@ public class MoveTest {
         char c = 'b';
         Move instance = new Move(1,'a');
         instance.addAlphabet(c);
-        assertEquals(new Move(1,new char[]{'a' , 'b'}), instance);
+        assertEquals(true, instance.equals(new Move(1,new char[]{'a' , 'b'})));
         
     }
 
@@ -122,5 +122,58 @@ public class MoveTest {
         instance.addAlphabet(ch);
         assertEquals(new Move(1,new char[]{'a' , 'b', 'c'}), instance);
     }
+
+    /**
+     * Test of equals method, of class Move.
+     */
+    @Test
+    public void testEquals() {
+        System.out.println("equals");
+        Object o = new Move(0,'a');
+        Move instance = new Move(0,'a');
+        boolean expResult = true;
+        boolean result = instance.equals(o);
+        assertEquals(expResult, result);
+    }
     
+        /**
+     * Test of equals method, of class Move.
+     */
+    @Test
+    public void testEquals2() {
+        System.out.println("equals");
+        Object o = new Move(0, new char[]{'a', 'b'});
+        Move instance = new Move(0,new char[]{'a', 'b'});
+        boolean expResult = true;
+        boolean result = instance.equals(o);
+        assertEquals(expResult, result);
+    }
+    
+        
+       /**
+     * Test of equals method, of class Move.
+     */
+    @Test
+    public void testEquals3() {
+        System.out.println("equals");
+        Object o = new Move(0, new char[]{'b', 'a'});
+        Move instance = new Move(0,new char[]{'a', 'b'});
+        boolean expResult = true;
+        boolean result = instance.equals(o);
+        assertEquals(expResult, result);
+    }
+    
+        
+        /**
+     * Test of equals method, of class Move.
+     */
+    @Test
+    public void testEquals4() {
+        System.out.println("equals");
+        Object o = new Move(0, new char[]{'a'});
+        Move instance = new Move(0,new char[]{'a', 'b'});
+        boolean expResult = false;
+        boolean result = instance.equals(o);
+        assertEquals(expResult, result);
+    }
 }

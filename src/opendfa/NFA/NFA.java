@@ -320,7 +320,7 @@ public class NFA {
         DFA dfa = new DFA(0); // il DFA
         Stack<Integer> newStates = new Stack<Integer>(); // nuovi stati del DFA
         HashSet<Character> alphabet = getAlphabet();
-        int q0 = dfa.AddNewState() - 1; // stato iniziale del DFA
+        int q0 = dfa.addNewState() - 1; // stato iniziale del DFA
         indexOfSet.put(epsilonClosure(0), q0); // stati dell'NFA corrisp. a q0
         setOfIndex.put(q0, epsilonClosure(0));
         newStates.push(q0); // nuovo stato da esplorare
@@ -332,13 +332,13 @@ public class NFA {
                 HashSet<Integer> qset = epsilonClosure(tmp);
                 if (indexOfSet.containsKey(qset)) { // se qset non e` nuovo...
                     final int q = indexOfSet.get(qset); // recupero il suo indice
-                    dfa.SetMove(p, ch, q); // aggiungo la transizione
+                    dfa.setMove(p, ch, q); // aggiungo la transizione
                 } else { // se invece qset e` nuovo
-                    final int q = dfa.AddNewState() - 1; // creo lo stato nel DFA
+                    final int q = dfa.addNewState() - 1; // creo lo stato nel DFA
                     indexOfSet.put(qset, q); // aggiorno la corrispondenza
                     setOfIndex.put(q, qset);
                     newStates.push(q); // q e` da visitare
-                    dfa.SetMove(p, ch, q); // aggiungo la transizione
+                    dfa.setMove(p, ch, q); // aggiungo la transizione
                 }
 
             }
@@ -346,7 +346,7 @@ public class NFA {
 // stabilisco gli stati finali del DFA
         for (int p = 0; p < setOfIndex.size(); p++) {
             if (_findAFinalState(setOfIndex.get(p))) {
-                dfa.AddFinalState(p);
+                dfa.addFinalState(p);
             }
         }
         return dfa;
