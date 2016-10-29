@@ -200,4 +200,5 @@ public abstract class DFAModel {
         return dfa.scan(line);
     }
 
+
 }
