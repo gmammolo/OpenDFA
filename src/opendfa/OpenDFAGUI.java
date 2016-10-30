@@ -8,15 +8,18 @@ package opendfa;
 import java.awt.GridLayout;
 import java.awt.Label;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 import javax.swing.JLabel;
 import opendfa.DFA.RangeChar;
 import opendfa.GUI.AddMoveGump;
+import opendfa.GUI.GestStateGump;
 
 /**
  *
  * @author terasud
  */
-public class OpenDFAGUI extends javax.swing.JFrame {
+public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
 
     private final OpenDFA dfa;
 
@@ -25,6 +28,7 @@ public class OpenDFAGUI extends javax.swing.JFrame {
      */
     public OpenDFAGUI(OpenDFA dfa) {
         this.dfa = dfa;
+        this.dfa.addObserver(this);
         initComponents();
         reloadTransitionPanel();
         reloadFinalState();
@@ -43,7 +47,8 @@ public class OpenDFAGUI extends javax.swing.JFrame {
         FinalState_Panel = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         Content_Panel = new javax.swing.JTabbedPane();
-        jButton1 = new javax.swing.JButton();
+        AddMoveButton = new javax.swing.JButton();
+        AddStateButton = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -80,10 +85,17 @@ public class OpenDFAGUI extends javax.swing.JFrame {
 
         Content_Panel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jButton1.setText("Add Move");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        AddMoveButton.setText("Add Move");
+        AddMoveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                AddMoveButtonActionPerformed(evt);
+            }
+        });
+
+        AddStateButton.setText("Add State");
+        AddStateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AddStateButtonActionPerformed(evt);
             }
         });
 
@@ -94,17 +106,21 @@ public class OpenDFAGUI extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Content_Panel)
+                    .addComponent(Content_Panel, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(0, 348, Short.MAX_VALUE))))
+                        .addComponent(AddStateButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(AddMoveButton)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(Content_Panel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(AddMoveButton)
+                    .addComponent(AddStateButton)))
         );
 
         fileMenu.setMnemonic('f');
@@ -200,20 +216,23 @@ public class OpenDFAGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     private void addMoveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMoveMenuItemActionPerformed
-       this.addMove();
+        this.addMove();
     }//GEN-LAST:event_addMoveMenuItemActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void AddMoveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddMoveButtonActionPerformed
         // TODO add your handling code here:
         addMove();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_AddMoveButtonActionPerformed
+
+    private void AddStateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddStateButtonActionPerformed
+        GestStateGump.generateNewState(dfa, dfa.numState());
+    }//GEN-LAST:event_AddStateButtonActionPerformed
 
     private void addMove() {
         AddMoveGump.generateAddMoveGump(dfa);
-        reloadTransitionPanel();
+
     }
-    
-    
+
     /**
      * @param args the command line arguments
      */
@@ -250,6 +269,8 @@ public class OpenDFAGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton AddMoveButton;
+    private javax.swing.JButton AddStateButton;
     private javax.swing.JTabbedPane Content_Panel;
     private javax.swing.JPanel Edge_Panel;
     private javax.swing.JPanel FinalState_Panel;
@@ -261,7 +282,6 @@ public class OpenDFAGUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
-    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;
@@ -269,10 +289,10 @@ public class OpenDFAGUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem saveMenuItem;
     // End of variables declaration//GEN-END:variables
 
-    private void reloadTransitionPanel() {
+    public void reloadTransitionPanel() {
         Edge_Panel.removeAll();
         ArrayList<String> transictionStryngify = dfa.getEdge();
-        Edge_Panel.setLayout(new GridLayout(transictionStryngify.size()+12,1));
+        Edge_Panel.setLayout(new GridLayout(transictionStryngify.size() + 12, 1));
         JLabel jLabel1 = new JLabel();
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel1.setText("Transizioni:");
@@ -280,21 +300,29 @@ public class OpenDFAGUI extends javax.swing.JFrame {
         for (String s : transictionStryngify) {
             Edge_Panel.add(new JLabel(s));
         }
-        
-
+        Edge_Panel.revalidate();
+        Edge_Panel.repaint();
     }
-    
+
     private void reloadFinalState() {
         FinalState_Panel.removeAll();
         JLabel jLabel2 = new JLabel();
         jLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel2.setText("Stati Finali:");
+        jLabel2.setText("Lista Stati Finali:");
         FinalState_Panel.add(jLabel2);
-        Integer[] finalState = dfa.getFinalStates();
-        FinalState_Panel.setLayout(new GridLayout(finalState.length+5,1));
-        for( Integer i : finalState) {
-            FinalState_Panel.add(new JLabel("q"+i));
+        
+        FinalState_Panel.setLayout(new GridLayout(dfa.numState() + 5, 1));
+        for (int i = 0; i<dfa.numState(); i++) {
+            FinalState_Panel.add(new JLabel("q" + i + ((dfa.isFinalState(i)) ? " *" : "" )));
         }
+        FinalState_Panel.revalidate();
+        FinalState_Panel.repaint();
+    }
+
+    @Override
+    public void update(Observable o, Object o1) {
+        reloadTransitionPanel();
+        reloadFinalState();
     }
 
 }

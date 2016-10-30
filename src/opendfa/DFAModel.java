@@ -6,6 +6,7 @@
 package opendfa;
 
 import java.util.ArrayList;
+import java.util.Observable;
 import opendfa.DFA.DFA;
 import opendfa.DFA.RangeChar;
 
@@ -14,7 +15,7 @@ import opendfa.DFA.RangeChar;
  *
  * @author giuseppe
  */
-public abstract class DFAModel {
+public abstract class DFAModel extends Observable {
 
     protected DFA dfa;
 

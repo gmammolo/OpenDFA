@@ -13,7 +13,6 @@ import java.util.ArrayList;
  */
 public class OpenDFA extends DFAModel {
 
-    private int numState;
 
     @Override
     protected void initializeDFA() {
@@ -25,12 +24,11 @@ public class OpenDFA extends DFAModel {
 
     @Override
     protected int numState() {
-        return this.numState;
+        return dfa.getNumberOfStates();
     }
 
     public OpenDFA(int numState) {
         super(numState);
-        this.numState = numState;
 
     }
 
@@ -51,21 +49,45 @@ public class OpenDFA extends DFAModel {
     @Override
     public void setMove(Integer start, char c, Integer end) {
         super.setMove(start, c, end);
+        setChanged();
+        notifyObservers();
     }
 
-    
     @Override
     public void setMove(Integer start, char charAt, char charAt0, Integer end) {
-        super.setMove(start, charAt, charAt0,end);
+        super.setMove(start, charAt, charAt0, end);
+        setChanged();
+        notifyObservers();
     }
 
     @Override
     public void setMove(Integer start, ArrayList<Character> list, Integer end) {
-       super.setMove(start, list, end);
+        super.setMove(start, list, end);
+        setChanged();
+        notifyObservers();
     }
-    
+
     public boolean isValidState(Integer end) {
         return dfa.isValidState(end);
     }
 
+    boolean isFinalState(int i) {
+        return dfa.isFinalState(i);
+    }
+
+    public void addState(int state) {
+        if (state == numState()) {
+            dfa.addNewState();
+            setChanged();
+            notifyObservers();
+        }
+
+    }
+
+    @Override
+    public void addFinalState(Integer p) {
+        super.addFinalState(p); //To change body of generated methods, choose Tools | Templates.
+        setChanged();
+        notifyObservers();
+    }
 }
