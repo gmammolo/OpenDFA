@@ -6,12 +6,16 @@
 package opendfa;
 
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import opendfa.GUI.AddMoveGump;
 import opendfa.GUI.GestStateGump;
+import opendfa.GUI.JLabelNumerated;
 
 /**
  *
@@ -45,7 +49,13 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
     private void initComponents() {
 
         Edge_Panel = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        transitionList = new javax.swing.JList<>();
         FinalState_Panel = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        finalStateList = new javax.swing.JList<>();
         jPanel1 = new javax.swing.JPanel();
         Content_Panel = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -72,20 +82,68 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
         Edge_Panel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         Edge_Panel.setAutoscrolls(true);
         Edge_Panel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        Edge_Panel.setLayout(new java.awt.GridLayout(15, 1));
+
+        jLabel1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel1.setText("Transizioni");
+
+        transitionList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        transitionList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                transitionListMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(transitionList);
+
+        javax.swing.GroupLayout Edge_PanelLayout = new javax.swing.GroupLayout(Edge_Panel);
+        Edge_Panel.setLayout(Edge_PanelLayout);
+        Edge_PanelLayout.setHorizontalGroup(
+            Edge_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        Edge_PanelLayout.setVerticalGroup(
+            Edge_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(Edge_PanelLayout.createSequentialGroup()
+                .addGap(2, 2, 2)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE))
+        );
 
         FinalState_Panel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         FinalState_Panel.setAutoscrolls(true);
+
+        jLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel2.setText("Stati Finali");
+
+        finalStateList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "q0" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        finalStateList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        finalStateList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                finalStateListMouseClicked(evt);
+            }
+        });
+        jScrollPane4.setViewportView(finalStateList);
 
         javax.swing.GroupLayout FinalState_PanelLayout = new javax.swing.GroupLayout(FinalState_Panel);
         FinalState_Panel.setLayout(FinalState_PanelLayout);
         FinalState_PanelLayout.setHorizontalGroup(
             FinalState_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(FinalState_PanelLayout.createSequentialGroup()
+                .addComponent(jLabel2)
+                .addGap(0, 81, Short.MAX_VALUE))
+            .addComponent(jScrollPane4)
         );
         FinalState_PanelLayout.setVerticalGroup(
             FinalState_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 146, Short.MAX_VALUE)
+            .addGroup(FinalState_PanelLayout.createSequentialGroup()
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         Content_Panel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -124,13 +182,13 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Content_Panel, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(AddStateButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(AddMoveButton)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addComponent(AddStateButton)
+                .addGap(18, 18, 18)
+                .addComponent(AddMoveButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(Content_Panel, javax.swing.GroupLayout.DEFAULT_SIZE, 534, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -208,10 +266,10 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(Edge_Panel, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
-                    .addComponent(FinalState_Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(FinalState_Panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Edge_Panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -222,7 +280,7 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(Edge_Panel, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
+                        .addComponent(Edge_Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(FinalState_Panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
@@ -246,6 +304,16 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
     private void AddStateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddStateButtonActionPerformed
         GestStateGump.generateNewState(dfa, dfa.numState());
     }//GEN-LAST:event_AddStateButtonActionPerformed
+
+    private void finalStateListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_finalStateListMouseClicked
+        int index = finalStateList.getSelectedIndex();
+        GestStateGump.generateNewState(dfa, index);
+    }//GEN-LAST:event_finalStateListMouseClicked
+
+    private void transitionListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_transitionListMouseClicked
+        int index = finalStateList.getSelectedIndex();
+        AddMoveGump.generateAddMoveGump(dfa, index);
+    }//GEN-LAST:event_transitionListMouseClicked
 
     private void addMove() {
         AddMoveGump.generateAddMoveGump(dfa);
@@ -300,46 +368,45 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JList<String> finalStateList;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JTextArea toDotText;
     private javax.swing.JTextArea toJavaText;
+    private javax.swing.JList<String> transitionList;
     // End of variables declaration//GEN-END:variables
 
     public void reloadTransitionPanel() {
-        Edge_Panel.removeAll();
+        transitionList.removeAll();
+         DefaultListModel listModel = new DefaultListModel();
         ArrayList<String> transictionStryngify = dfa.getEdge();
-        Edge_Panel.setLayout(new GridLayout(transictionStryngify.size() + 12, 1));
-        JLabel jLabel1 = new JLabel();
-        jLabel1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel1.setText("Transizioni:");
-        Edge_Panel.add(jLabel1);
-        for (String s : transictionStryngify) {
-            Edge_Panel.add(new JLabel(s));
+        for(String s: transictionStryngify) {
+            listModel.addElement(s);
         }
-        Edge_Panel.revalidate();
-        Edge_Panel.repaint();
+        transitionList.setModel(listModel);
+        transitionList.revalidate();
+        transitionList.repaint();
     }
 
     private void reloadFinalState() {
-        FinalState_Panel.removeAll();
-        JLabel jLabel2 = new JLabel();
-        jLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel2.setText("Lista Stati Finali:");
-        FinalState_Panel.add(jLabel2);
-
-        FinalState_Panel.setLayout(new GridLayout(dfa.numState() + 5, 1));
+        finalStateList.removeAll();
+        DefaultListModel listModel = new DefaultListModel();
         for (int i = 0; i < dfa.numState(); i++) {
-            FinalState_Panel.add(new JLabel("q" + i + ((dfa.isFinalState(i)) ? " *" : "")));
+            listModel.addElement("q" + i + ((dfa.isFinalState(i)) ? " *" : ""));
         }
-        FinalState_Panel.revalidate();
-        FinalState_Panel.repaint();
+        finalStateList.setModel(listModel);
+        finalStateList.revalidate();
+        finalStateList.repaint();
     }
 
     @Override

@@ -16,6 +16,10 @@ import opendfa.OpenDFA;
  */
 public class AddMoveGump extends javax.swing.JDialog {
 
+    public static void generateAddMoveGump(OpenDFA dfa, int index) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     private OpenDFA dfa;
 
     /**
@@ -67,6 +71,11 @@ public class AddMoveGump extends javax.swing.JDialog {
         jLabel3.setText("end");
 
         startInput.setText("0");
+        startInput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startInputActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("=====[simboli]======>");
 
@@ -295,6 +304,10 @@ public class AddMoveGump extends javax.swing.JDialog {
     private void arrayTextFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_arrayTextFocusGained
          jRadioButton3.setSelected(true);
     }//GEN-LAST:event_arrayTextFocusGained
+
+    private void startInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startInputActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_startInputActionPerformed
 
     /**
      * @param args the command line arguments
