@@ -137,8 +137,8 @@ public abstract class DFAModel extends Observable {
      * @param name node nel grafo
      *
      */
-    public void toDot(String name) {
-        dfa.toDOT(name);
+    public String toDot(String name) {
+        return dfa.toDOT(name);
     }
 
     /**
@@ -147,8 +147,8 @@ public abstract class DFAModel extends Observable {
      * @param name node nel grafo
      * @param outputDir URL della directory di output
      */
-    public void toDot(String name, String outputDir) {
-        dfa.toDOT(name, outputDir);
+    public String toDot(String name, String outputDir) {
+        return dfa.toDOT(name, outputDir);
     }
 
     /**
@@ -175,8 +175,8 @@ public abstract class DFAModel extends Observable {
      *
      * @param s nome della classe java
      */
-    public void toJava(String s) {
-        dfa.toJava(s);
+    public String toJava(String s) {
+        return dfa.toJava(s);
     }
 
     /**
@@ -186,8 +186,8 @@ public abstract class DFAModel extends Observable {
      * @param outputDir URL della directory di output
      *
      */
-    public void toJava(String s, String outputDir) {
-        dfa.toJava(s, outputDir);
+    public String toJava(String s, String outputDir) {
+        return dfa.toJava(s, outputDir);
     }
 
     /**
@@ -200,6 +200,5 @@ public abstract class DFAModel extends Observable {
     public boolean scan(String line) {
         return dfa.scan(line);
     }
-
 
 }

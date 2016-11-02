@@ -78,20 +78,40 @@ public class AddMoveGump extends javax.swing.JDialog {
         });
 
         singleText.setText("a");
+        singleText.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                singleTextFocusGained(evt);
+            }
+        });
 
         jRadioButton2.setText("Range di Simboli:");
 
         jLabel5.setText("da");
 
         fromText.setText("a");
+        fromText.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                fromTextFocusGained(evt);
+            }
+        });
 
         jLabel6.setText("a");
 
         toText.setText("b");
+        toText.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                toTextFocusGained(evt);
+            }
+        });
 
         jRadioButton3.setText("Array di Simboli:");
 
         arrayText.setText("a,b,c,d,s,r,e");
+        arrayText.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                arrayTextFocusGained(evt);
+            }
+        });
 
         okButton.setText("OK");
         okButton.addActionListener(new java.awt.event.ActionListener() {
@@ -259,6 +279,22 @@ public class AddMoveGump extends javax.swing.JDialog {
         dispose();
 
     }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void singleTextFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_singleTextFocusGained
+        jRadioButton1.setSelected(true);
+    }//GEN-LAST:event_singleTextFocusGained
+
+    private void fromTextFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fromTextFocusGained
+        jRadioButton2.setSelected(true);
+    }//GEN-LAST:event_fromTextFocusGained
+
+    private void toTextFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_toTextFocusGained
+         jRadioButton2.setSelected(true);
+    }//GEN-LAST:event_toTextFocusGained
+
+    private void arrayTextFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_arrayTextFocusGained
+         jRadioButton3.setSelected(true);
+    }//GEN-LAST:event_arrayTextFocusGained
 
     /**
      * @param args the command line arguments

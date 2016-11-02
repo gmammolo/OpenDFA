@@ -339,9 +339,10 @@ public class DFA {
      * <a href="http://www.graphviz.org">GraphViz</a>.
      *
      * @param name Nome dell'automa.
+     * @return 
      */
-    public void toDOT(String name) {
-        this.toDOT(name, OUTPUT_DIR);
+    public String toDOT(String name) {
+        return this.toDOT(name, OUTPUT_DIR);
     }
 
     /**
@@ -350,8 +351,9 @@ public class DFA {
      *
      * @param name Nome dell'automa.
      * @param OutputDir
+     * @return 
      */
-    public void toDOT(String name, String OutputDir) {
+    public String toDOT(String name, String OutputDir) {
 // DA IMPLEMENTARE 2.5
         String out = "digraph " + name + "{\n";
         out += "rankdir=LR;\n";
@@ -369,8 +371,8 @@ public class DFA {
             out += "q" + m.start + " -> q" + _transitions.get(m) + " [ label = \"" + m.label + "\" ];\n";
         }
         out += "}";
-        System.out.println(out);
-        this._writeToFile(OutputDir + name + ".dot", out);
+        return out;
+        //this._writeToFile(OutputDir + name + ".dot", out);
     }
 
     public void toPNG(String Name) {
@@ -404,9 +406,10 @@ public class DFA {
      * l'automa.
      *
      * @param name Nome della classe da generare.
+     * @return 
      */
-    public void toJava(String name) {
-        this.toJava(name, OUTPUT_DIR);
+    public String toJava(String name) {
+        return this.toJava(name, OUTPUT_DIR);
     }
 
     /**
@@ -415,8 +418,9 @@ public class DFA {
      *
      * @param name Nome della classe da generare.
      * @param OutputDir
+     * @return 
      */
-    public void toJava(String name, String OutputDir) {
+    public String toJava(String name, String OutputDir) {
         String s = "public class " + name + " {\n"
                 + "\tpublic static boolean scan(String s)\n"
                 + "\t{\n"
@@ -455,18 +459,20 @@ public class DFA {
 
         s += "\t\treturn ";
         Object[] arr = _finalStates.toArray();
-        for (int i = 0; i < _finalStates.size() - 1; i++) {
-            s += "state == " + arr[i] + " || ";
+        if(arr.length > 0 )
+             s += "state == " + arr[0];
+        for (int i = 1; i < arr.length - 1; i++) {
+            s += " ||  state == " + arr[i] ;
         }
-        s += "state == " + String.valueOf(arr[arr.length - 1]) + ";\n\t\t}\n";
+        s += ";\n\t\t}\n";
         s += "\tpublic static void main(String[] args)\n"
                 + "\t{\n"
                 + "\t\tSystem.out.println(scan(args[0]) ? \"OK\" : \"NOPE\");\n"
                 + "\t}\n"
                 + "}\n";
 
-        System.out.println(s);
-        this._writeToFile(OutputDir + name + "_code.java", s);
+        return s;
+        //this._writeToFile(OutputDir + name + "_code.java", s);
     }
 
     /**

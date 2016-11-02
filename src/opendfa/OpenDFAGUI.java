@@ -6,12 +6,10 @@
 package opendfa;
 
 import java.awt.GridLayout;
-import java.awt.Label;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JLabel;
-import opendfa.DFA.RangeChar;
 import opendfa.GUI.AddMoveGump;
 import opendfa.GUI.GestStateGump;
 
@@ -22,16 +20,19 @@ import opendfa.GUI.GestStateGump;
 public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
 
     private final OpenDFA dfa;
+    private String name;
 
     /**
      * Creates new form OpenDFAGUI
      */
     public OpenDFAGUI(OpenDFA dfa) {
         this.dfa = dfa;
+        name = "Nuovo Dfa";
         this.dfa.addObserver(this);
         initComponents();
         reloadTransitionPanel();
         reloadFinalState();
+        reloadContent();
     }
 
     /**
@@ -47,6 +48,10 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
         FinalState_Panel = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         Content_Panel = new javax.swing.JTabbedPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        toJavaText = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        toDotText = new javax.swing.JTextArea();
         AddMoveButton = new javax.swing.JButton();
         AddStateButton = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
@@ -84,6 +89,20 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
         );
 
         Content_Panel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        toJavaText.setEditable(false);
+        toJavaText.setColumns(20);
+        toJavaText.setRows(5);
+        jScrollPane1.setViewportView(toJavaText);
+
+        Content_Panel.addTab("toJava", jScrollPane1);
+
+        toDotText.setEditable(false);
+        toDotText.setColumns(20);
+        toDotText.setRows(5);
+        jScrollPane2.setViewportView(toDotText);
+
+        Content_Panel.addTab("toDOT", jScrollPane2);
 
         AddMoveButton.setText("Add Move");
         AddMoveButton.addActionListener(new java.awt.event.ActionListener() {
@@ -283,10 +302,14 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
+    private javax.swing.JTextArea toDotText;
+    private javax.swing.JTextArea toJavaText;
     // End of variables declaration//GEN-END:variables
 
     public void reloadTransitionPanel() {
@@ -310,10 +333,10 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
         jLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel2.setText("Lista Stati Finali:");
         FinalState_Panel.add(jLabel2);
-        
+
         FinalState_Panel.setLayout(new GridLayout(dfa.numState() + 5, 1));
-        for (int i = 0; i<dfa.numState(); i++) {
-            FinalState_Panel.add(new JLabel("q" + i + ((dfa.isFinalState(i)) ? " *" : "" )));
+        for (int i = 0; i < dfa.numState(); i++) {
+            FinalState_Panel.add(new JLabel("q" + i + ((dfa.isFinalState(i)) ? " *" : "")));
         }
         FinalState_Panel.revalidate();
         FinalState_Panel.repaint();
@@ -323,6 +346,11 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
     public void update(Observable o, Object o1) {
         reloadTransitionPanel();
         reloadFinalState();
+        reloadContent();
     }
 
+    private void reloadContent() {
+        toJavaText.setText(dfa.toJava(name));
+        toDotText.setText(dfa.toDot(name));
+    }
 }
