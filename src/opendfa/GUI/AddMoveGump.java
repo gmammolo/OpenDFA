@@ -229,22 +229,31 @@ public class AddMoveGump extends javax.swing.JDialog {
                 dispose();
             }
         } else if (jRadioButton2.isSelected()) {
-            Pattern p = Pattern.compile("^(\\w(-\\w|,\\w)?)+$", Pattern.MULTILINE);
-            Matcher m = p.matcher(arrayText.getText());
-            if (arrayText.getText().length() == 0 ||  !m.find()) {
-                WarningError.generateWarningMessage("caratteri non validi");
+            String text = arrayText.getText();
+            if (text.length() == 0) {
+                WarningError.generateWarningMessage("inserire almeno un carattere");
                 return;
             } else {
-
                 ArrayList<Character> list = new ArrayList<>();
-                for (Character c : arrayText.getText().toCharArray()) {
-                    if (c != ' ' && c != ',') {
-                        list.add(c);
-                        dfa.remove(edge.start, edge.alphabet);
-                        dfa.setMove(start, list, end);
-                        dispose();
+                Pattern p = Pattern.compile("\\w-\\w");
+                Matcher m = p.matcher(arrayText.getText());
+                while (m.find()) {
+                    char _start = text.charAt(m.start());
+                    char _end = text.charAt(m.end() - 1);
+                    char _index = _start;
+                    while (_index <= _end) {
+                        list.add(_index++);
                     }
                 }
+                text = m.replaceAll("");
+                for (Character c : text.toCharArray()) {
+                    if (c != ' ' && c != ',') {
+                        list.add(c);
+                    }
+                }
+                dfa.remove(edge.start, edge.alphabet);
+                dfa.setMove(start, list, end);
+                dispose();
             }
 
         } else {
