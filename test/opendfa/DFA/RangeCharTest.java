@@ -5,6 +5,7 @@
  */
 package opendfa.DFA;
 
+import main.java.com.opendfa.DFA.RangeChar;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.junit.After;

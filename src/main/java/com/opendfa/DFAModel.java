@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package opendfa;
+package main.java.com.opendfa;
 
 import java.util.ArrayList;
 import java.util.Observable;
-import opendfa.DFA.DFA;
-import opendfa.DFA.RangeChar;
+import main.java.com.opendfa.DFA.DFA;
+import main.java.com.opendfa.DFA.RangeChar;
 
 /**
  * Modello del DFA per utilizzare direttamente le api senza interfaccia grafica
@@ -157,9 +157,10 @@ public abstract class DFAModel extends Observable {
      * Genera il png del DFA (Richiede GraphViz installato).
      *
      * @param name node nel grafo
+     * @return URL
      */
-    public void toPng(String name) {
-        dfa.toPNG(name);
+    public String toPng(String name) {
+        return dfa.toPNG(name);
     }
 
     /**
@@ -167,9 +168,10 @@ public abstract class DFAModel extends Observable {
      *
      * @param name node nel grafo
      * @param outputDir URL della directory di output
+     * @return URL
      */
-    public void ToPng(String name, String outputDir) {
-        dfa.toPNG(name, outputDir);
+    public String ToPng(String name, String outputDir) {
+        return dfa.toPNG(name, outputDir);
     }
 
     /**

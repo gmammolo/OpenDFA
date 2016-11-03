@@ -5,10 +5,11 @@
  */
 package opendfa.NFA;
 
+import main.java.com.opendfa.NFA.NFA;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import opendfa.DFA.DFA;
+import main.java.com.opendfa.DFA.DFA;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package opendfa.GUI;
+package main.java.com.opendfa.GUI;
 
-import opendfa.OpenDFA;
+import main.java.com.opendfa.OpenDFA;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**

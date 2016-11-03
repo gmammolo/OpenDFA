@@ -1,4 +1,4 @@
-package opendfa.DFA;
+package main.java.com.opendfa.DFA;
 
 import java.util.ArrayList;
 import java.util.Arrays;

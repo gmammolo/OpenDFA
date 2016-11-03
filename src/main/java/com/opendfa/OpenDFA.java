@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package opendfa;
+package main.java.com.opendfa;
 
 import java.util.ArrayList;
-import opendfa.DFA.Edge;
-import opendfa.DFA.Move;
+import main.java.com.opendfa.DFA.Edge;
+import main.java.com.opendfa.DFA.Move;
 
 /**
  *
@@ -108,5 +108,14 @@ public class OpenDFA extends DFAModel {
 
     public void remove(Integer start, ArrayList<Character> alphabet) {
         dfa.remove (start, alphabet);
+    }
+
+    /**
+     * Crea un'immagine del grafo nella cartella temporanea, per la visualizzazione
+     * @param name
+     * @return 
+     */
+    public String toPngTemp(String name) {
+        return dfa.toPNGTemp(name);
     }
 }

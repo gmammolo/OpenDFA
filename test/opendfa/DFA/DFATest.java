@@ -5,6 +5,7 @@
  */
 package opendfa.DFA;
 
+import main.java.com.opendfa.DFA.DFA;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;

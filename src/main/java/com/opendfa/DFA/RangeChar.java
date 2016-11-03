@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package opendfa.DFA;
+package main.java.com.opendfa.DFA;
 
 import java.util.ArrayList;
 import java.util.Objects;

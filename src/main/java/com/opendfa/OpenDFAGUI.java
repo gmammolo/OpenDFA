@@ -3,14 +3,24 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package opendfa;
+package main.java.com.opendfa;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
-import opendfa.GUI.AddMoveGump;
-import opendfa.GUI.GestStateGump;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import main.java.com.opendfa.GUI.AddMoveGump;
+import main.java.com.opendfa.GUI.GestStateGump;
 
 /**
  *
@@ -26,7 +36,7 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
      */
     public OpenDFAGUI(OpenDFA dfa) {
         this.dfa = dfa;
-        name = "Nuovo Dfa";
+        name = "NuovoDfa";
         this.dfa.addObserver(this);
         initComponents();
         reloadTransitionPanel();
@@ -57,6 +67,7 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
         toJavaText = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
         toDotText = new javax.swing.JTextArea();
+        graphLabel = new javax.swing.JLabel();
         AddMoveButton = new javax.swing.JButton();
         AddStateButton = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
@@ -156,6 +167,11 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
         jScrollPane2.setViewportView(toDotText);
 
         Content_Panel.addTab("toDOT", jScrollPane2);
+
+        graphLabel.setIcon(new javax.swing.ImageIcon("/home/terasud/NetBeansProjects/OpenDFA/Output/NuovoDfa.png")); // NOI18N
+        graphLabel.setMaximumSize(new java.awt.Dimension(100, 100));
+        graphLabel.setMinimumSize(new java.awt.Dimension(50, 50));
+        Content_Panel.addTab("graph", graphLabel);
 
         AddMoveButton.setText("Add Move");
         AddMoveButton.addActionListener(new java.awt.event.ActionListener() {
@@ -364,6 +380,7 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JList<String> finalStateList;
+    private javax.swing.JLabel graphLabel;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -383,9 +400,9 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
 
     public void reloadTransitionPanel() {
         transitionList.removeAll();
-         DefaultListModel listModel = new DefaultListModel();
+        DefaultListModel listModel = new DefaultListModel();
         ArrayList<String> transictionStryngify = dfa.getEdge();
-        for(String s: transictionStryngify) {
+        for (String s : transictionStryngify) {
             listModel.addElement(s);
         }
         transitionList.setModel(listModel);
@@ -414,5 +431,29 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
     private void reloadContent() {
         toJavaText.setText(dfa.toJava(name));
         toDotText.setText(dfa.toDot(name));
+        //dfa.toPngTemp(name);
+        //graph.setIcon(new javax.swing.ImageIcon("/home/terasud/NetBeansProjects/OpenDFA/Temp/NuovoDfa.png")); // NOI18N
+        ImageIcon icon = new javax.swing.ImageIcon(dfa.toPngTemp(name));
+        icon.getImage().flush();
+        graphLabel.setIcon(icon); // NOI18N
+        graphLabel.revalidate();
+        graphLabel.repaint();
+        Content_Panel.revalidate();
+        Content_Panel.repaint();
     }
+
+    /**
+     * Returns an ImageIcon, or null if the path was invalid.
+     */
+    private ImageIcon createImageIcon(String path, String description) {
+        BufferedImage img = null;
+        try {
+            File f = new File(path);
+            img = ImageIO.read(f);
+        } catch (IOException ex) {
+            Logger.getLogger(OpenDFAGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new ImageIcon(img);
+    }
+
 }

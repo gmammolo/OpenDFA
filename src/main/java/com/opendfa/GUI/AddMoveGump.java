@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package opendfa.GUI;
+package main.java.com.opendfa.GUI;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import opendfa.DFA.Edge;
-import opendfa.DFA.Move;
-import opendfa.OpenDFA;
+import main.java.com.opendfa.DFA.Edge;
+import main.java.com.opendfa.DFA.Move;
+import main.java.com.opendfa.OpenDFA;
 
 /**
  *

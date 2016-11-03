@@ -1,5 +1,5 @@
 //Ultima versione pdf: http://informatica.i-learn.unito.it/file.php/1001/esercizi_24_11_2014.pdf
-package opendfa.DFA;
+package main.java.com.opendfa.DFA;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -375,22 +375,35 @@ public class DFA {
         //this._writeToFile(OutputDir + name + ".dot", out);
     }
 
-    public void toPNG(String Name) {
-        this.toPNG(Name, OUTPUT_DIR);
-
+    /**
+     * 
+     * @param Name
+     * @return URL
+     */
+    public String toPNG(String Name) {
+        return this.toPNG(Name, OUTPUT_DIR);
     }
 
-    public void toPNG(String Name, String OutputDir) {
+    /**
+     *
+     * @param Name
+     * @param OutputDir
+     * @return URL
+     */
+    public String toPNG(String Name, String OutputDir) {
         try {
-            this.toDOT(Name, TEMP_DIR);
+            String toDOT = this.toDOT(Name, TEMP_DIR);
             String dotFIleUrl = TEMP_DIR + Name + ".dot";
+            _writeToFile(dotFIleUrl, toDOT);
             Runtime rt = Runtime.getRuntime();
             String[] args = {DOT, "-Tpng", "-Gdpi=" + _dpiSizes[this._currentDpiPos], dotFIleUrl, "-o", OutputDir + Name + ".png"};
             Process p = rt.exec(args);
             p.waitFor();
+            return OutputDir + Name + ".png";
         } catch (IOException | InterruptedException ex) {
             Logger.getLogger(DFA.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return "";
     }
 
     private void _writeToFile(String filename, String context) {
@@ -745,6 +758,10 @@ public class DFA {
             }
         }
         _transitions.remove(remove);
+    }
+
+    public String toPNGTemp(String name) {
+        return this.toPNG(name, TEMP_DIR);
     }
 
 }

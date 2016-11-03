@@ -1,13 +1,13 @@
 //Ultima versione pdf: http://informatica.i-learn.unito.it/file.php/1001/esercizi_24_11_2014.pdf
-package opendfa.NFA;
+package main.java.com.opendfa.NFA;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Stack;
-import opendfa.DFA.DFA;
-import opendfa.DFA.Move;
+import main.java.com.opendfa.DFA.DFA;
+import main.java.com.opendfa.DFA.Move;
 
 /**
  * Un oggetto della classe NFA rappresenta un automa a stati finiti non

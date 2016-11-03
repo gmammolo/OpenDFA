@@ -1,4 +1,4 @@
-package opendfa.GraphViz;
+package main.java.com.opendfa.GraphViz;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

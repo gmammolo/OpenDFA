@@ -1,4 +1,4 @@
-package opendfa.GraphViz;
+package main.java.com.opendfa.GraphViz;
 
 // GraphViz.java - a simple API to call dot from Java programs
 
