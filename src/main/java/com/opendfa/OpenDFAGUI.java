@@ -19,7 +19,7 @@ import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import main.java.com.opendfa.GUI.AddMoveGump;
+import main.java.com.opendfa.GUI.GestMoveGump;
 import main.java.com.opendfa.GUI.GestStateGump;
 
 /**
@@ -323,11 +323,11 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
 
     private void transitionListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_transitionListMouseClicked
         int index = transitionList.getSelectedIndex();
-        AddMoveGump.generateAddMoveGump(dfa, index);
+        GestMoveGump.generateAddMoveGump(dfa, index);
     }//GEN-LAST:event_transitionListMouseClicked
 
     private void addMove() {
-        AddMoveGump.generateAddMoveGump(dfa);
+        GestMoveGump.generateAddMoveGump(dfa);
 
     }
 

@@ -752,12 +752,21 @@ public class DFA {
 
     public void remove(Integer start, ArrayList<Character> alphabet) {
          Move remove = null;
+         ArrayList<Character> newList = new ArrayList<>();
         for (Move m : _transitions.keySet()) {
             if (m.start == start && m.alphabet.contains(alphabet.get(0))) {
                 remove= m;
+                newList =(ArrayList<Character>) m.alphabet.clone();
+                for(Character c : alphabet) {
+                    if(newList.contains(c))
+                        newList.remove(c);
+                } 
             }
         }
-        _transitions.remove(remove);
+        Integer end = _transitions.remove(remove);
+        if(newList.size() > 0) {
+            _transitions.put(new Move(start, newList) , end);
+        }
     }
 
     public String toPNGTemp(String name) {

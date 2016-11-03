@@ -10,14 +10,13 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import main.java.com.opendfa.DFA.Edge;
-import main.java.com.opendfa.DFA.Move;
 import main.java.com.opendfa.OpenDFA;
 
 /**
  *
  * @author terasud
  */
-public class AddMoveGump extends javax.swing.JDialog {
+public class GestMoveGump extends javax.swing.JDialog {
 
     private OpenDFA dfa;
     private Edge edge;
@@ -25,14 +24,14 @@ public class AddMoveGump extends javax.swing.JDialog {
     /**
      * Creates new form AddMoveGump
      */
-    public AddMoveGump(java.awt.Frame parent, boolean modal, OpenDFA dfa) {
+    public GestMoveGump(java.awt.Frame parent, boolean modal, OpenDFA dfa) {
         this(parent, modal, dfa, new Edge(0, 0, new ArrayList<Character>(Arrays.asList('a')), "a"));
     }
 
     /**
      * Creates new form AddMoveGump
      */
-    public AddMoveGump(java.awt.Frame parent, boolean modal, OpenDFA dfa, Edge e) {
+    public GestMoveGump(java.awt.Frame parent, boolean modal, OpenDFA dfa, Edge e) {
         super(parent, modal);
         initComponents();
         buttonGroup1.add(jRadioButton1);
@@ -224,7 +223,7 @@ public class AddMoveGump extends javax.swing.JDialog {
                 return;
             } else {
                 Character c = singleText.getText().charAt(0);
-                dfa.remove(edge.start, edge.alphabet);
+                dfa.remove(edge.start,new  ArrayList<Character>(Arrays.asList(c)));
                 dfa.setMove(start, c, end);
                 dispose();
             }
@@ -251,7 +250,7 @@ public class AddMoveGump extends javax.swing.JDialog {
                         list.add(c);
                     }
                 }
-                dfa.remove(edge.start, edge.alphabet);
+                dfa.remove(edge.start, list);
                 dfa.setMove(start, list, end);
                 dispose();
             }
@@ -297,27 +296,28 @@ public class AddMoveGump extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AddMoveGump.class
+            java.util.logging.Logger.getLogger(GestMoveGump.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AddMoveGump.class
+            java.util.logging.Logger.getLogger(GestMoveGump.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AddMoveGump.class
+            java.util.logging.Logger.getLogger(GestMoveGump.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AddMoveGump.class
+            java.util.logging.Logger.getLogger(GestMoveGump.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                AddMoveGump dialog = new AddMoveGump(new javax.swing.JFrame(), true, new OpenDFA(0));
+                GestMoveGump dialog = new GestMoveGump(new javax.swing.JFrame(), true, new OpenDFA(0));
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -333,7 +333,7 @@ public class AddMoveGump extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                AddMoveGump dialog = new AddMoveGump(new javax.swing.JFrame(), true, dfa);
+                GestMoveGump dialog = new GestMoveGump(new javax.swing.JFrame(), true, dfa);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -351,7 +351,7 @@ public class AddMoveGump extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
 
-                AddMoveGump dialog = new AddMoveGump(new javax.swing.JFrame(), true, dfa, e);
+                GestMoveGump dialog = new GestMoveGump(new javax.swing.JFrame(), true, dfa, e);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
