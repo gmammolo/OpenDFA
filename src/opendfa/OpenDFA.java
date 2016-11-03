@@ -6,6 +6,8 @@
 package opendfa;
 
 import java.util.ArrayList;
+import opendfa.DFA.Edge;
+import opendfa.DFA.Move;
 
 /**
  *
@@ -34,6 +36,10 @@ public class OpenDFA extends DFAModel {
 
     public ArrayList<String> getEdge() {
         return this.dfa.getEdgeStringify();
+    }
+    
+    public Edge getEdgeAt(int index) {
+        return this.dfa.getEdgeAt(index);
     }
 
     Integer[] getFinalStates() {
@@ -83,11 +89,24 @@ public class OpenDFA extends DFAModel {
         }
 
     }
+    
+    public int move(int start, char c) {
+        return dfa.move(start, c);
+    }
+    
+     public int move(Move m) {
+        return dfa.move(m.start, m.alphabet.get(0));
+    }
+
 
     @Override
     public void addFinalState(Integer p) {
         super.addFinalState(p); //To change body of generated methods, choose Tools | Templates.
         setChanged();
         notifyObservers();
+    }
+
+    public void remove(Integer start, ArrayList<Character> alphabet) {
+        dfa.remove (start, alphabet);
     }
 }

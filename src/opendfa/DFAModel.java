@@ -135,6 +135,7 @@ public abstract class DFAModel extends Observable {
      * Stampa il dot del DFA. l'output URL è definito in config.properties
      *
      * @param name node nel grafo
+     * @return 
      *
      */
     public String toDot(String name) {
@@ -146,6 +147,7 @@ public abstract class DFAModel extends Observable {
      *
      * @param name node nel grafo
      * @param outputDir URL della directory di output
+     * @return 
      */
     public String toDot(String name, String outputDir) {
         return dfa.toDOT(name, outputDir);
@@ -174,6 +176,7 @@ public abstract class DFAModel extends Observable {
      * Stampa a video il codice del dfa
      *
      * @param s nome della classe java
+     * @return 
      */
     public String toJava(String s) {
         return dfa.toJava(s);
@@ -184,6 +187,7 @@ public abstract class DFAModel extends Observable {
      *
      * @param s nome della classe java
      * @param outputDir URL della directory di output
+     * @return 
      *
      */
     public String toJava(String s, String outputDir) {

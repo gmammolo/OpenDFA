@@ -5,17 +5,12 @@
  */
 package opendfa;
 
-import java.awt.GridLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.DefaultListModel;
-import javax.swing.JLabel;
 import opendfa.GUI.AddMoveGump;
 import opendfa.GUI.GestStateGump;
-import opendfa.GUI.JLabelNumerated;
 
 /**
  *
@@ -311,7 +306,7 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
     }//GEN-LAST:event_finalStateListMouseClicked
 
     private void transitionListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_transitionListMouseClicked
-        int index = finalStateList.getSelectedIndex();
+        int index = transitionList.getSelectedIndex();
         AddMoveGump.generateAddMoveGump(dfa, index);
     }//GEN-LAST:event_transitionListMouseClicked
 

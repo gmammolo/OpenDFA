@@ -6,8 +6,11 @@
 package opendfa.GUI;
 
 import java.util.ArrayList;
-import opendfa.DFA.DFA;
-import opendfa.DFAModel;
+import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import opendfa.DFA.Edge;
+import opendfa.DFA.Move;
 import opendfa.OpenDFA;
 
 /**
@@ -16,22 +19,29 @@ import opendfa.OpenDFA;
  */
 public class AddMoveGump extends javax.swing.JDialog {
 
-    public static void generateAddMoveGump(OpenDFA dfa, int index) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     private OpenDFA dfa;
+    private Edge edge;
 
     /**
      * Creates new form AddMoveGump
      */
     public AddMoveGump(java.awt.Frame parent, boolean modal, OpenDFA dfa) {
+        this(parent, modal, dfa, new Edge(0, 0, new ArrayList<Character>(Arrays.asList('a')), "a"));
+    }
+
+    /**
+     * Creates new form AddMoveGump
+     */
+    public AddMoveGump(java.awt.Frame parent, boolean modal, OpenDFA dfa, Edge e) {
         super(parent, modal);
         initComponents();
         buttonGroup1.add(jRadioButton1);
         buttonGroup1.add(jRadioButton2);
-        buttonGroup1.add(jRadioButton3);
         this.dfa = dfa;
+        this.edge = e;
+        startInput.setText(e.start.toString());
+        endInput.setText(e.end.toString());
+        arrayText.setText(e.label);
     }
 
     /**
@@ -52,11 +62,6 @@ public class AddMoveGump extends javax.swing.JDialog {
         jRadioButton1 = new javax.swing.JRadioButton();
         singleText = new javax.swing.JTextField();
         jRadioButton2 = new javax.swing.JRadioButton();
-        jLabel5 = new javax.swing.JLabel();
-        fromText = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
-        toText = new javax.swing.JTextField();
-        jRadioButton3 = new javax.swing.JRadioButton();
         arrayText = new javax.swing.JTextField();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
@@ -95,26 +100,6 @@ public class AddMoveGump extends javax.swing.JDialog {
 
         jRadioButton2.setText("Range di Simboli:");
 
-        jLabel5.setText("da");
-
-        fromText.setText("a");
-        fromText.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                fromTextFocusGained(evt);
-            }
-        });
-
-        jLabel6.setText("a");
-
-        toText.setText("b");
-        toText.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                toTextFocusGained(evt);
-            }
-        });
-
-        jRadioButton3.setText("Array di Simboli:");
-
         arrayText.setText("a,b,c,d,s,r,e");
         arrayText.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -149,7 +134,7 @@ public class AddMoveGump extends javax.swing.JDialog {
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(endInput, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3)))
@@ -157,29 +142,22 @@ public class AddMoveGump extends javax.swing.JDialog {
                         .addGap(5, 5, 5)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(48, 48, 48)
-                                .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(cancelButton))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(48, 48, 48)
+                                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(cancelButton))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jRadioButton1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(singleText, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jRadioButton2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(fromText, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(toText, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jRadioButton1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(singleText, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jRadioButton3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(arrayText)))))
-                .addGap(57, 57, 57))
+                .addGap(51, 51, 51))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -200,19 +178,12 @@ public class AddMoveGump extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jRadioButton2)
-                    .addComponent(jLabel5)
-                    .addComponent(fromText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6)
-                    .addComponent(toText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButton3)
                     .addComponent(arrayText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(48, 48, 48)
+                .addGap(77, 77, 77)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(okButton)
                     .addComponent(cancelButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         pack();
@@ -253,25 +224,23 @@ public class AddMoveGump extends javax.swing.JDialog {
                 return;
             } else {
                 Character c = singleText.getText().charAt(0);
+                dfa.remove(edge.start, edge.alphabet);
                 dfa.setMove(start, c, end);
                 dispose();
             }
         } else if (jRadioButton2.isSelected()) {
-            if (fromText.getText().length() != 1 || toText.getText().length() != 1) {
-                //TODO: verificare che sia un carattere valido
-                WarningError.generateWarningMessage("i campi devono contenere solo un carattere");
+            Pattern p = Pattern.compile("^(\\w(-\\w|,\\w)?)+$", Pattern.MULTILINE);
+            Matcher m = p.matcher(arrayText.getText());
+            if (arrayText.getText().length() == 0 ||  !m.find()) {
+                WarningError.generateWarningMessage("caratteri non validi");
+                return;
             } else {
-                dfa.setMove(start, fromText.getText().charAt(0), toText.getText().charAt(0), end);
-                dispose();
-            }
-        } else if (jRadioButton3.isSelected()) {
-            if (arrayText.getText().length() == 0) {
-                WarningError.generateWarningMessage("e metticelo almeno un carattere");
-            } else {
+
                 ArrayList<Character> list = new ArrayList<>();
                 for (Character c : arrayText.getText().toCharArray()) {
                     if (c != ' ' && c != ',') {
                         list.add(c);
+                        dfa.remove(edge.start, edge.alphabet);
                         dfa.setMove(start, list, end);
                         dispose();
                     }
@@ -293,16 +262,8 @@ public class AddMoveGump extends javax.swing.JDialog {
         jRadioButton1.setSelected(true);
     }//GEN-LAST:event_singleTextFocusGained
 
-    private void fromTextFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fromTextFocusGained
-        jRadioButton2.setSelected(true);
-    }//GEN-LAST:event_fromTextFocusGained
-
-    private void toTextFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_toTextFocusGained
-         jRadioButton2.setSelected(true);
-    }//GEN-LAST:event_toTextFocusGained
-
     private void arrayTextFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_arrayTextFocusGained
-         jRadioButton3.setSelected(true);
+        jRadioButton2.setSelected(true);
     }//GEN-LAST:event_arrayTextFocusGained
 
     private void startInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startInputActionPerformed
@@ -375,23 +336,37 @@ public class AddMoveGump extends javax.swing.JDialog {
         });
     }
 
+    public static void generateAddMoveGump(OpenDFA dfa, int index) {
+        /* Create and display the dialog */
+        Edge e = dfa.getEdgeAt(index);
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+
+                AddMoveGump dialog = new AddMoveGump(new javax.swing.JFrame(), true, dfa, e);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        dialog.dispose();
+                    }
+                });
+                dialog.setVisible(true);
+            }
+        });
+    }
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField arrayText;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton cancelButton;
     private javax.swing.JTextField endInput;
-    private javax.swing.JTextField fromText;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JButton okButton;
     private javax.swing.JTextField singleText;
     private javax.swing.JTextField startInput;
-    private javax.swing.JTextField toText;
     // End of variables declaration//GEN-END:variables
 }

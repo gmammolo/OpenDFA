@@ -339,7 +339,7 @@ public class DFA {
      * <a href="http://www.graphviz.org">GraphViz</a>.
      *
      * @param name Nome dell'automa.
-     * @return 
+     * @return
      */
     public String toDOT(String name) {
         return this.toDOT(name, OUTPUT_DIR);
@@ -351,7 +351,7 @@ public class DFA {
      *
      * @param name Nome dell'automa.
      * @param OutputDir
-     * @return 
+     * @return
      */
     public String toDOT(String name, String OutputDir) {
 // DA IMPLEMENTARE 2.5
@@ -406,7 +406,7 @@ public class DFA {
      * l'automa.
      *
      * @param name Nome della classe da generare.
-     * @return 
+     * @return
      */
     public String toJava(String name) {
         return this.toJava(name, OUTPUT_DIR);
@@ -418,7 +418,7 @@ public class DFA {
      *
      * @param name Nome della classe da generare.
      * @param OutputDir
-     * @return 
+     * @return
      */
     public String toJava(String name, String OutputDir) {
         String s = "public class " + name + " {\n"
@@ -459,10 +459,11 @@ public class DFA {
 
         s += "\t\treturn ";
         Object[] arr = _finalStates.toArray();
-        if(arr.length > 0 )
-             s += "state == " + arr[0];
+        if (arr.length > 0) {
+            s += "state == " + arr[0];
+        }
         for (int i = 1; i < arr.length - 1; i++) {
-            s += " ||  state == " + arr[i] ;
+            s += " ||  state == " + arr[i];
         }
         s += ";\n\t\t}\n";
         s += "\tpublic static void main(String[] args)\n"
@@ -714,12 +715,36 @@ public class DFA {
     }
 
     public ArrayList<String> getEdgeStringify() {
-       ArrayList<Move> moves = this._orderByInitialState();
-       ArrayList<String> result = new ArrayList<>();
-       for(Move move : moves) {
-          result.add("q"+move.start + " =["+move.label+"]=> q"+_transitions.get(move)  );
-       } 
-       return result;
+        ArrayList<Move> moves = this._orderByInitialState();
+        ArrayList<String> result = new ArrayList<>();
+        for (Move move : moves) {
+            result.add("q" + move.start + " =[" + move.label + "]=> q" + _transitions.get(move));
+        }
+        return result;
+    }
+
+    /**
+     * Metodo ausiliario per la GUI: restituisce il move nella posizione passata per permetterne la modifica
+     * @param index
+     * @return 
+     */
+    public Edge getEdgeAt(int index) {
+        ArrayList<Move> moves = this._orderByInitialState();
+        if (index > -1 && index < moves.size()) {
+            Move m = moves.get(index);
+            return new Edge(m.start, move(m.start, m.alphabet.get(0)), m.alphabet, m.label);
+        }
+        return null;
+    }
+
+    public void remove(Integer start, ArrayList<Character> alphabet) {
+         Move remove = null;
+        for (Move m : _transitions.keySet()) {
+            if (m.start == start && m.alphabet.contains(alphabet.get(0))) {
+                remove= m;
+            }
+        }
+        _transitions.remove(remove);
     }
 
 }
