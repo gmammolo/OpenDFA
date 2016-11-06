@@ -376,7 +376,7 @@ public class DFA {
     }
 
     /**
-     * 
+     *
      * @param Name
      * @return URL
      */
@@ -736,10 +736,21 @@ public class DFA {
         return result;
     }
 
+    public ArrayList<Edge> getEdges() {
+        ArrayList<Move> moves = this._orderByInitialState();
+        ArrayList<Edge> result = new ArrayList<>();
+        for (Move move : moves) {
+            result.add(new Edge(move.start,_transitions.get(move), move.alphabet, move.label));
+        }
+        return result;
+    }
+
     /**
-     * Metodo ausiliario per la GUI: restituisce il move nella posizione passata per permetterne la modifica
+     * Metodo ausiliario per la GUI: restituisce il move nella posizione passata
+     * per permetterne la modifica
+     *
      * @param index
-     * @return 
+     * @return
      */
     public Edge getEdgeAt(int index) {
         ArrayList<Move> moves = this._orderByInitialState();
@@ -751,21 +762,22 @@ public class DFA {
     }
 
     public void remove(Integer start, ArrayList<Character> alphabet) {
-         Move remove = null;
-         ArrayList<Character> newList = new ArrayList<>();
+        Move remove = null;
+        ArrayList<Character> newList = new ArrayList<>();
         for (Move m : _transitions.keySet()) {
             if (m.start == start && m.alphabet.contains(alphabet.get(0))) {
-                remove= m;
-                newList =(ArrayList<Character>) m.alphabet.clone();
-                for(Character c : alphabet) {
-                    if(newList.contains(c))
+                remove = m;
+                newList = (ArrayList<Character>) m.alphabet.clone();
+                for (Character c : alphabet) {
+                    if (newList.contains(c)) {
                         newList.remove(c);
-                } 
+                    }
+                }
             }
         }
         Integer end = _transitions.remove(remove);
-        if(newList.size() > 0) {
-            _transitions.put(new Move(start, newList) , end);
+        if (newList.size() > 0) {
+            _transitions.put(new Move(start, newList), end);
         }
     }
 

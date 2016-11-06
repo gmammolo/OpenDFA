@@ -5,7 +5,13 @@
  */
 package main.java.com.opendfa;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import main.java.com.opendfa.DFA.Edge;
 import main.java.com.opendfa.DFA.Move;
 
@@ -14,7 +20,6 @@ import main.java.com.opendfa.DFA.Move;
  * @author terasud
  */
 public class OpenDFA extends DFAModel {
-
 
     @Override
     protected void initializeDFA() {
@@ -34,10 +39,10 @@ public class OpenDFA extends DFAModel {
 
     }
 
-    public ArrayList<String> getEdge() {
+    public ArrayList<String> getEdgesStringify() {
         return this.dfa.getEdgeStringify();
     }
-    
+
     public Edge getEdgeAt(int index) {
         return this.dfa.getEdgeAt(index);
     }
@@ -89,15 +94,14 @@ public class OpenDFA extends DFAModel {
         }
 
     }
-    
+
     public int move(int start, char c) {
         return dfa.move(start, c);
     }
-    
-     public int move(Move m) {
+
+    public int move(Move m) {
         return dfa.move(m.start, m.alphabet.get(0));
     }
-
 
     @Override
     public void addFinalState(Integer p) {
@@ -107,15 +111,43 @@ public class OpenDFA extends DFAModel {
     }
 
     public void remove(Integer start, ArrayList<Character> alphabet) {
-        dfa.remove (start, alphabet);
+        dfa.remove(start, alphabet);
     }
 
     /**
-     * Crea un'immagine del grafo nella cartella temporanea, per la visualizzazione
+     * Crea un'immagine del grafo nella cartella temporanea, per la
+     * visualizzazione
+     *
      * @param name
-     * @return 
+     * @return
      */
     public String toPngTemp(String name) {
         return dfa.toPNGTemp(name);
+    }
+
+    void saveFile(File file) {
+        try (PrintWriter writer = new PrintWriter(file)) {
+            writer.println("state;finalState");
+            HashSet<Integer> allState = dfa.getAllState();
+            writer.println(allState.size());
+            for(Integer state:allState ) {
+                writer.println(state+";"+isFinalState(state));
+            }
+            
+            writer.println("start;end;character");
+            ArrayList<Edge> allEdges = this.getEdges();
+            writer.println(allEdges.size());
+            for(Edge e : allEdges) {
+                writer.println(e.start+";"+e.end+";"+e.alphabet.toString());
+            }
+            
+            writer.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(OpenDFA.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private ArrayList<Edge> getEdges() {
+        return dfa.getEdges();
     }
 }

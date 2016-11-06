@@ -105,6 +105,11 @@ public class GestMoveGump extends javax.swing.JDialog {
                 arrayTextFocusGained(evt);
             }
         });
+        arrayText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                arrayTextActionPerformed(evt);
+            }
+        });
 
         okButton.setText("OK");
         okButton.addActionListener(new java.awt.event.ActionListener() {
@@ -277,6 +282,10 @@ public class GestMoveGump extends javax.swing.JDialog {
     private void startInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startInputActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_startInputActionPerformed
+
+    private void arrayTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_arrayTextActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_arrayTextActionPerformed
 
     /**
      * @param args the command line arguments

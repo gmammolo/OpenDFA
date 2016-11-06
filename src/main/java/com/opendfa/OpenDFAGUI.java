@@ -19,6 +19,7 @@ import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import main.java.com.opendfa.GUI.DfaFilter;
 import main.java.com.opendfa.GUI.GestMoveGump;
 import main.java.com.opendfa.GUI.GestStateGump;
 
@@ -42,6 +43,9 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
         reloadTransitionPanel();
         reloadFinalState();
         reloadContent();
+        
+        jSaveChooser.setAcceptAllFileFilterUsed(false);
+        jSaveChooser.addChoosableFileFilter(new DfaFilter());
     }
 
     /**
@@ -53,6 +57,7 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jSaveChooser = new javax.swing.JFileChooser();
         Edge_Panel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -82,6 +87,12 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
         helpMenu = new javax.swing.JMenu();
         contentsMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
+
+        jSaveChooser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jSaveChooserActionPerformed(evt);
+            }
+        });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -168,7 +179,6 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
 
         Content_Panel.addTab("toDOT", jScrollPane2);
 
-        graphLabel.setIcon(new javax.swing.ImageIcon("/home/terasud/NetBeansProjects/OpenDFA/Output/NuovoDfa.png")); // NOI18N
         graphLabel.setMaximumSize(new java.awt.Dimension(100, 100));
         graphLabel.setMinimumSize(new java.awt.Dimension(50, 50));
         Content_Panel.addTab("graph", graphLabel);
@@ -211,6 +221,8 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
                     .addComponent(AddStateButton)))
         );
 
+        menuBar.setName("OpenDFA"); // NOI18N
+
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
 
@@ -220,11 +232,21 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
 
         saveMenuItem.setMnemonic('s');
         saveMenuItem.setText("Save");
+        saveMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveMenuItemActionPerformed(evt);
+            }
+        });
         fileMenu.add(saveMenuItem);
 
         saveAsMenuItem.setMnemonic('a');
         saveAsMenuItem.setText("Save As ...");
         saveAsMenuItem.setDisplayedMnemonicIndex(5);
+        saveAsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveAsMenuItemActionPerformed(evt);
+            }
+        });
         fileMenu.add(saveAsMenuItem);
 
         exitMenuItem.setMnemonic('x');
@@ -326,6 +348,30 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
         GestMoveGump.generateAddMoveGump(dfa, index);
     }//GEN-LAST:event_transitionListMouseClicked
 
+    private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
+        if (!false) { //TODO: check if file exist and overwrite
+
+        } else {
+            int returnVal = jSaveChooser.showDialog(this, "Save as..");
+
+        }
+
+    }//GEN-LAST:event_saveMenuItemActionPerformed
+
+    private void saveAsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsMenuItemActionPerformed
+        int returnVal = jSaveChooser.showDialog(this, "Save as..");
+        if (returnVal == jSaveChooser.APPROVE_OPTION) {
+            File file = jSaveChooser.getSelectedFile();
+            _saveFile(file);
+            
+        }
+
+    }//GEN-LAST:event_saveAsMenuItemActionPerformed
+
+    private void jSaveChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSaveChooserActionPerformed
+
+    }//GEN-LAST:event_jSaveChooserActionPerformed
+
     private void addMove() {
         GestMoveGump.generateAddMoveGump(dfa);
 
@@ -385,6 +431,7 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JFileChooser jSaveChooser;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -401,7 +448,7 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
     public void reloadTransitionPanel() {
         transitionList.removeAll();
         DefaultListModel listModel = new DefaultListModel();
-        ArrayList<String> transictionStryngify = dfa.getEdge();
+        ArrayList<String> transictionStryngify = dfa.getEdgesStringify();
         for (String s : transictionStryngify) {
             listModel.addElement(s);
         }
@@ -454,6 +501,10 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
             Logger.getLogger(OpenDFAGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
         return new ImageIcon(img);
+    }
+
+    private void _saveFile(File file) {
+        dfa.saveFile(file);
     }
 
 }
