@@ -29,8 +29,9 @@ import main.java.com.opendfa.GUI.GestStateGump;
  */
 public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
 
-    private final OpenDFA dfa;
+    private OpenDFA dfa;
     private String name;
+    private File saveFile;
 
     /**
      * Creates new form OpenDFAGUI
@@ -38,14 +39,15 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
     public OpenDFAGUI(OpenDFA dfa) {
         this.dfa = dfa;
         name = "NuovoDfa";
+        saveFile = null;
         this.dfa.addObserver(this);
         initComponents();
-        reloadTransitionPanel();
-        reloadFinalState();
-        reloadContent();
-        
+        reload();
+
         jSaveChooser.setAcceptAllFileFilterUsed(false);
         jSaveChooser.addChoosableFileFilter(new DfaFilter());
+        jLoadChooser.setAcceptAllFileFilterUsed(false);
+        jLoadChooser.addChoosableFileFilter(new DfaFilter());
     }
 
     /**
@@ -58,6 +60,7 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
     private void initComponents() {
 
         jSaveChooser = new javax.swing.JFileChooser();
+        jLoadChooser = new javax.swing.JFileChooser();
         Edge_Panel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -228,6 +231,11 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
 
         openMenuItem.setMnemonic('o');
         openMenuItem.setText("Open");
+        openMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openMenuItemActionPerformed(evt);
+            }
+        });
         fileMenu.add(openMenuItem);
 
         saveMenuItem.setMnemonic('s');
@@ -349,11 +357,10 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
     }//GEN-LAST:event_transitionListMouseClicked
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
-        if (!false) { //TODO: check if file exist and overwrite
-
+        if (saveFile != null) { //TODO: check if file exist and overwrite
+            _saveFile(saveFile);
         } else {
-            int returnVal = jSaveChooser.showDialog(this, "Save as..");
-
+            saveAsMenuItemActionPerformed(evt);
         }
 
     }//GEN-LAST:event_saveMenuItemActionPerformed
@@ -363,7 +370,7 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
         if (returnVal == jSaveChooser.APPROVE_OPTION) {
             File file = jSaveChooser.getSelectedFile();
             _saveFile(file);
-            
+            saveFile = file;
         }
 
     }//GEN-LAST:event_saveAsMenuItemActionPerformed
@@ -371,6 +378,16 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
     private void jSaveChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSaveChooserActionPerformed
 
     }//GEN-LAST:event_jSaveChooserActionPerformed
+
+    private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
+        int returnVal = jLoadChooser.showDialog(this, "load file");
+        if (returnVal == jLoadChooser.APPROVE_OPTION) {
+            File file = jLoadChooser.getSelectedFile();
+            _loadFile(file);
+            saveFile = file;
+        }
+
+    }//GEN-LAST:event_openMenuItemActionPerformed
 
     private void addMove() {
         GestMoveGump.generateAddMoveGump(dfa);
@@ -430,6 +447,7 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
     private javax.swing.JMenu helpMenu;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JFileChooser jLoadChooser;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JFileChooser jSaveChooser;
     private javax.swing.JScrollPane jScrollPane1;
@@ -470,9 +488,7 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
 
     @Override
     public void update(Observable o, Object o1) {
-        reloadTransitionPanel();
-        reloadFinalState();
-        reloadContent();
+        reload();
     }
 
     private void reloadContent() {
@@ -505,6 +521,18 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
 
     private void _saveFile(File file) {
         dfa.saveFile(file);
+    }
+
+    private void _loadFile(File file) {
+        dfa = OpenDFA.loadFile(file);
+        dfa.addObserver(this);
+        reload();
+    }
+
+    public void reload() {
+        reloadTransitionPanel();
+        reloadFinalState();
+        reloadContent();
     }
 
 }

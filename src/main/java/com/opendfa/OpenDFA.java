@@ -5,13 +5,19 @@
  */
 package main.java.com.opendfa;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import main.java.com.opendfa.DFA.Edge;
 import main.java.com.opendfa.DFA.Move;
 
@@ -130,17 +136,17 @@ public class OpenDFA extends DFAModel {
             writer.println("state;finalState");
             HashSet<Integer> allState = dfa.getAllState();
             writer.println(allState.size());
-            for(Integer state:allState ) {
-                writer.println(state+";"+isFinalState(state));
+            for (Integer state : allState) {
+                writer.println(state + ";" + isFinalState(state));
             }
-            
+
             writer.println("start;end;character");
             ArrayList<Edge> allEdges = this.getEdges();
             writer.println(allEdges.size());
-            for(Edge e : allEdges) {
-                writer.println(e.start+";"+e.end+";"+e.alphabet.toString());
+            for (Edge e : allEdges) {
+                writer.println(e.start + ";" + e.end + ";" + e.alphabet.toString());
             }
-            
+
             writer.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(OpenDFA.class.getName()).log(Level.SEVERE, null, ex);
@@ -150,4 +156,50 @@ public class OpenDFA extends DFAModel {
     private ArrayList<Edge> getEdges() {
         return dfa.getEdges();
     }
+
+    public static OpenDFA loadFile(File file) {
+        OpenDFA dfa = new OpenDFA(0);
+        BufferedReader in = null;
+        try {
+            in = new BufferedReader(new FileReader(file));
+            in.readLine(); //testo inutile
+            Integer n = Integer.parseInt(in.readLine());
+            dfa = new OpenDFA(n);
+            for (int i = 0; i < n; i++) {
+                String line = in.readLine();
+                ArrayList<String> list = new ArrayList<>(Arrays.asList(line.split(";")));
+                dfa.addState(Integer.parseInt(list.get(0)));
+                if (Boolean.getBoolean(list.get(1))) {
+                    dfa.addFinalState(Integer.parseInt(list.get(0)));
+                }
+            }
+
+            in.readLine(); //testo inutile
+            n = Integer.parseInt(in.readLine());
+            for (int i = 0; i < n; i++) {
+                String line = in.readLine();
+                ArrayList<String> list = new ArrayList<>(Arrays.asList(line.split(";")));
+                ArrayList<Character> chars = new ArrayList<>();
+                for (char c : line.substring(5, line.length() - 1).toCharArray()) {
+                    if (c != ',' && c != ' ') {
+                        chars.add(c);
+                    }
+                }
+                dfa.setMove(Integer.parseInt(list.get(0)), chars, Integer.parseInt(list.get(1)));
+            }
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(OpenDFA.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(OpenDFA.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                in.close();
+            } catch (IOException ex) {
+                Logger.getLogger(OpenDFA.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return dfa;
+    }
+
 }

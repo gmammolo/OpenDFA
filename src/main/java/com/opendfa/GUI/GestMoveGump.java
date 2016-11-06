@@ -198,7 +198,6 @@ public class GestMoveGump extends javax.swing.JDialog {
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        // TODO add your handling code here:
         Integer start = 0;
         try {
             start = Integer.parseInt(startInput.getText());
@@ -257,6 +256,7 @@ public class GestMoveGump extends javax.swing.JDialog {
                 }
                 dfa.remove(edge.start, list);
                 dfa.setMove(start, list, end);
+                
                 dispose();
             }
 

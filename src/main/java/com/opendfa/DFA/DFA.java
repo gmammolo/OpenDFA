@@ -459,10 +459,9 @@ public class DFA {
             if (move.alphabet.size() > 0) {
 
                 for (int i = 0; i < move.alphabet.size() - 1; i++) {
-                    s += " ch == " + move.alphabet.get(i) + " || ";
+                    s += " ch == '" + move.alphabet.get(i) + "' || ";
                 }
-                s += " ch == " + move.alphabet.get(move.alphabet.size() - 1);
-                s += " ) \n";
+                s += " ch == '" + move.alphabet.get(move.alphabet.size() - 1)+ "' ) \n";
                 s += "\t\t\t\t\t state = " + end + ";\n";
             }
 
