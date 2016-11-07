@@ -227,7 +227,7 @@ public class GestMoveGump extends javax.swing.JDialog {
                 return;
             } else {
                 Character c = singleText.getText().charAt(0);
-                dfa.remove(edge.start,new  ArrayList<Character>(Arrays.asList(c)));
+                dfa.remove(start,new  ArrayList<Character>(Arrays.asList(c)));
                 dfa.setMove(start, c, end);
                 dispose();
             }
