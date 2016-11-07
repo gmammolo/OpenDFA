@@ -5,8 +5,8 @@
  */
 package main.java.com.opendfa.GUI;
 
+import javax.swing.JOptionPane;
 import main.java.com.opendfa.OpenDFA;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  *
@@ -16,6 +16,7 @@ public class GestStateGump extends javax.swing.JDialog {
 
     private OpenDFA dfa;
     private int state;
+
     /**
      * Creates new form AddStateGump
      */
@@ -24,9 +25,9 @@ public class GestStateGump extends javax.swing.JDialog {
         this.dfa = dfa;
         this.state = state;
         initComponents();
-        stateNameLabel.setText("q"+state);
+        stateNameLabel.setText("q" + state);
         finalStateProps.setSelected(dfa.isValidState(state));
-        
+
     }
 
     /**
@@ -113,18 +114,24 @@ public class GestStateGump extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         // TODO add your handling code here:
         dfa.addState(state);
-        if(finalStateProps.isSelected()) {
+        if (finalStateProps.isSelected()) {
             dfa.addFinalState(state);
         }
         dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-     dispose();
+        dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
-        throw new NotImplementedException();
+        JOptionPane.showMessageDialog(this,
+                "non è attualmente possibile eliminare gli stati. \n"
+                + "Per ottenere lo stesso risultato settarli come non finali \n"
+                + "e assicurarsi che non siano presenti transizioni che li \n"
+                + "coinvolgano.",
+                "Non supportato",
+                JOptionPane.WARNING_MESSAGE);
     }//GEN-LAST:event_removeButtonActionPerformed
 
     /**

@@ -38,6 +38,7 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
      * @param dfa
      */
     public OpenDFAGUI(OpenDFA dfa) {
+        setTitle("OpenDFA");
         this.dfa = dfa;
         name = "NuovoDfa";
         saveFile = null;
