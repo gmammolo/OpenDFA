@@ -5,11 +5,10 @@
  */
 package main.java.com.opendfa;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageFilter;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -18,7 +17,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import main.java.com.opendfa.GUI.DfaFilter;
 import main.java.com.opendfa.GUI.GestMoveGump;
 import main.java.com.opendfa.GUI.GestStateGump;
@@ -35,6 +34,8 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
 
     /**
      * Creates new form OpenDFAGUI
+     *
+     * @param dfa
      */
     public OpenDFAGUI(OpenDFA dfa) {
         this.dfa = dfa;
@@ -48,6 +49,15 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
         jSaveChooser.addChoosableFileFilter(new DfaFilter());
         jLoadChooser.setAcceptAllFileFilterUsed(false);
         jLoadChooser.addChoosableFileFilter(new DfaFilter());
+
+        jExportJavaChooser.setAcceptAllFileFilterUsed(false);
+        jExportJavaChooser.addChoosableFileFilter(new FileNameExtensionFilter("Java File", "java"));
+
+        jExportDotChooser.setAcceptAllFileFilterUsed(false);
+        jExportDotChooser.addChoosableFileFilter(new FileNameExtensionFilter("dot file", "dot"));
+
+        jExportPngChooser.setAcceptAllFileFilterUsed(false);
+        jExportPngChooser.addChoosableFileFilter(new FileNameExtensionFilter("Image files", ImageIO.getReaderFileSuffixes()));
     }
 
     /**
@@ -61,6 +71,9 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
 
         jSaveChooser = new javax.swing.JFileChooser();
         jLoadChooser = new javax.swing.JFileChooser();
+        jExportJavaChooser = new javax.swing.JFileChooser();
+        jExportDotChooser = new javax.swing.JFileChooser();
+        jExportPngChooser = new javax.swing.JFileChooser();
         Edge_Panel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -83,6 +96,10 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
         openMenuItem = new javax.swing.JMenuItem();
         saveMenuItem = new javax.swing.JMenuItem();
         saveAsMenuItem = new javax.swing.JMenuItem();
+        exportMenu = new javax.swing.JMenu();
+        exportJava = new javax.swing.JMenuItem();
+        exportDot = new javax.swing.JMenuItem();
+        exportPng = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         addMoveMenuItem = new javax.swing.JMenuItem();
@@ -257,6 +274,34 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
         });
         fileMenu.add(saveAsMenuItem);
 
+        exportMenu.setText("Export As...");
+
+        exportJava.setText("Java Code");
+        exportJava.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportJavaActionPerformed(evt);
+            }
+        });
+        exportMenu.add(exportJava);
+
+        exportDot.setText("Dot File");
+        exportDot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportDotActionPerformed(evt);
+            }
+        });
+        exportMenu.add(exportDot);
+
+        exportPng.setText("PNG Image");
+        exportPng.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportPngActionPerformed(evt);
+            }
+        });
+        exportMenu.add(exportPng);
+
+        fileMenu.add(exportMenu);
+
         exitMenuItem.setMnemonic('x');
         exitMenuItem.setText("Exit");
         exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -389,6 +434,31 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
 
     }//GEN-LAST:event_openMenuItemActionPerformed
 
+    private void exportJavaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportJavaActionPerformed
+        int returnVal = jExportJavaChooser.showDialog(this, "Save as..");
+        if (returnVal == jExportJavaChooser.APPROVE_OPTION) {
+            File file = jExportJavaChooser.getSelectedFile();
+            _exportFile(file, dfa.toJava(name));
+        }
+    }//GEN-LAST:event_exportJavaActionPerformed
+
+    private void exportDotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportDotActionPerformed
+        int returnVal = jExportDotChooser.showDialog(this, "Save as..");
+        if (returnVal == jExportDotChooser.APPROVE_OPTION) {
+            File file = jExportDotChooser.getSelectedFile();
+            _exportFile(file, dfa.toDot(name));
+        }
+    }//GEN-LAST:event_exportDotActionPerformed
+
+    private void exportPngActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportPngActionPerformed
+
+        int returnVal = jExportPngChooser.showDialog(this, "Save as..");
+        if (returnVal == jExportPngChooser.APPROVE_OPTION) {
+            File file = jExportPngChooser.getSelectedFile();
+            dfa.ToPng(name, file);
+        }
+    }//GEN-LAST:event_exportPngActionPerformed
+
     private void addMove() {
         GestMoveGump.generateAddMoveGump(dfa);
 
@@ -441,10 +511,17 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
     private javax.swing.JMenuItem contentsMenuItem;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitMenuItem;
+    private javax.swing.JMenuItem exportDot;
+    private javax.swing.JMenuItem exportJava;
+    private javax.swing.JMenu exportMenu;
+    private javax.swing.JMenuItem exportPng;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JList<String> finalStateList;
     private javax.swing.JLabel graphLabel;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JFileChooser jExportDotChooser;
+    private javax.swing.JFileChooser jExportJavaChooser;
+    private javax.swing.JFileChooser jExportPngChooser;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JFileChooser jLoadChooser;
@@ -533,6 +610,10 @@ public class OpenDFAGUI extends javax.swing.JFrame implements Observer {
         reloadTransitionPanel();
         reloadFinalState();
         reloadContent();
+    }
+
+    private void _exportFile(File file, String text) {
+        dfa.writeFile(file, text);
     }
 
 }

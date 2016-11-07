@@ -202,4 +202,18 @@ public class OpenDFA extends DFAModel {
         return dfa;
     }
 
+    void writeFile(File file, String text) {
+            try (PrintWriter writer = new PrintWriter(file)) {
+            writer.print(text);
+            writer.flush();
+            writer.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(OpenDFA.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    void ToPng(String name, File file) {
+        dfa.toPNG(name, file);
+    }
+
 }

@@ -1,6 +1,7 @@
 //Ultima versione pdf: http://informatica.i-learn.unito.it/file.php/1001/esercizi_24_11_2014.pdf
 package main.java.com.opendfa.DFA;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -400,6 +401,22 @@ public class DFA {
             Process p = rt.exec(args);
             p.waitFor();
             return OutputDir + Name + ".png";
+        } catch (IOException | InterruptedException ex) {
+            Logger.getLogger(DFA.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "";
+    }
+    
+    public String toPNG(String Name, File file) {
+        try {
+            String toDOT = this.toDOT(Name, TEMP_DIR);
+            String dotFIleUrl = TEMP_DIR + Name + ".dot";
+            _writeToFile(dotFIleUrl, toDOT);
+            Runtime rt = Runtime.getRuntime();
+            String[] args = {DOT, "-Tpng", "-Gdpi=" + _dpiSizes[this._currentDpiPos], dotFIleUrl, "-o", file.getAbsolutePath()};
+            Process p = rt.exec(args);
+            p.waitFor();
+            return file.getAbsolutePath();
         } catch (IOException | InterruptedException ex) {
             Logger.getLogger(DFA.class.getName()).log(Level.SEVERE, null, ex);
         }
