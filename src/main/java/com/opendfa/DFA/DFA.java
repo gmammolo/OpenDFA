@@ -406,7 +406,7 @@ public class DFA {
         }
         return "";
     }
-    
+
     public String toPNG(String Name, File file) {
         try {
             String toDOT = this.toDOT(Name, TEMP_DIR);
@@ -453,48 +453,53 @@ public class DFA {
     public String toJava(String name, String OutputDir) {
         String s = "public class " + name + " {\n"
                 + "\tpublic static boolean scan(String s)\n"
-                + "\t{\n"
-                + "\t\tint state = 0;\n"
-                + "\t\tint i = 0;\n"
-                + "\t\twhile(state >= 0 && i < s.length()) {\n"
-                + "\t\tfinal char ch = s.charAt(i++);\n"
-                + "\t\tswitch(state) {\n";
+                + "\t{\n";
         ArrayList<Move> entries = _orderByInitialState();
         Integer OldState = -1;
-        for (Move move : entries) {
-            Integer end = _transitions.get(move);
-            if (move.start != OldState) {
-                if (OldState != -1) {
-                    s += "\t\t\t\t else \n\t\t\t\t\t state = -1; \n\t\t\t break; \n";
+        if (entries.size() > 0) {
+            s += "\t\tint state = 0;\n"
+                    + "\t\tint i = 0;\n"
+                    + "\t\twhile(state >= 0 && i < s.length()) {\n"
+                    + "\t\tfinal char ch = s.charAt(i++);\n"
+                    + "\t\tswitch(state) {\n";
+
+            for (Move move : entries) {
+                Integer end = _transitions.get(move);
+                if (move.start != OldState) {
+                    if (OldState != -1) {
+                        s += "\t\t\t\t else \n\t\t\t\t\t state = -1; \n\t\t\t\t break; \n";
+                    }
+                    s += "\t\t\t case " + move.start + ": \n";
+                    OldState = move.start;
+                    s += "\t\t\t\t if( ";
+                } else {
+                    s += "\t\t\t\t else if( ";
                 }
-                s += "\t\t\t case " + move.start + ": \n";
-                OldState = move.start;
-                s += "\t\t\t\t if( ";
-            } else {
-                s += "\t\t\t\t else if( ";
-            }
-            if (move.alphabet.size() > 0) {
+                if (move.alphabet.size() > 0) {
 
-                for (int i = 0; i < move.alphabet.size() - 1; i++) {
-                    s += " ch == '" + move.alphabet.get(i) + "' || ";
+                    for (int i = 0; i < move.alphabet.size() - 1; i++) {
+                        s += " ch == '" + move.alphabet.get(i) + "' || ";
+                    }
+                    s += " ch == '" + move.alphabet.get(move.alphabet.size() - 1) + "' ) \n";
+                    s += "\t\t\t\t\t state = " + end + ";\n";
                 }
-                s += " ch == '" + move.alphabet.get(move.alphabet.size() - 1)+ "' ) \n";
-                s += "\t\t\t\t\t state = " + end + ";\n";
+
             }
+            s += "\t\t\t\t else \n\t\t\t\t\t state = -1; \n\t\t\t\t break; \n";
+            s += "\t\t\t}\n\t\t}\n";
 
+            s += "\t\treturn ";
+            Object[] arr = _finalStates.toArray();
+            if (arr.length > 0) {
+                s += "state == " + arr[0];
+            }
+            for (int i = 1; i < arr.length - 1; i++) {
+                s += " ||  state == " + arr[i];
+            }
+            s += ";\n\t\t}\n";
+        } else {
+            s += "\t\t return " + ( (isFinalState(0) ) ? "true" : "false") +" && s.length() ==0;\n \t} \n";
         }
-        s += "\t\t\t\t else \n\t\t\t\t\t state = -1; \n\t\t\t break; \n";
-        s += "\t\t\t}\n\t\t}\n";
-
-        s += "\t\treturn ";
-        Object[] arr = _finalStates.toArray();
-        if (arr.length > 0) {
-            s += "state == " + arr[0];
-        }
-        for (int i = 1; i < arr.length - 1; i++) {
-            s += " ||  state == " + arr[i];
-        }
-        s += ";\n\t\t}\n";
         s += "\tpublic static void main(String[] args)\n"
                 + "\t{\n"
                 + "\t\tSystem.out.println(scan(args[0]) ? \"OK\" : \"NOPE\");\n"
@@ -756,7 +761,7 @@ public class DFA {
         ArrayList<Move> moves = this._orderByInitialState();
         ArrayList<Edge> result = new ArrayList<>();
         for (Move move : moves) {
-            result.add(new Edge(move.start,_transitions.get(move), move.alphabet, move.label));
+            result.add(new Edge(move.start, _transitions.get(move), move.alphabet, move.label));
         }
         return result;
     }
