@@ -321,7 +321,7 @@ public class DFA {
      */
     public int move(int p, char ch) {
         for (Entry<Move, Integer> entry : _transitions.entrySet()) {
-            if (entry.getKey().alphabet.contains(ch)) {
+            if (entry.getKey().start == p && entry.getKey().alphabet.contains(ch)) {
                 return entry.getValue();
             }
 
