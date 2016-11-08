@@ -14,11 +14,15 @@ import main.java.com.opendfa.OpenDFA;
  */
 public class GestStateGump extends javax.swing.JDialog {
 
-    private OpenDFA dfa;
-    private int state;
+    private final OpenDFA dfa;
+    private final int state;
 
     /**
      * Creates new form AddStateGump
+     * @param parent .
+     * @param modal .
+     * @param dfa OPENDFA
+     * @param state stato da modificare
      */
     public GestStateGump(java.awt.Frame parent, boolean modal, OpenDFA dfa, int state) {
         super(parent, modal);

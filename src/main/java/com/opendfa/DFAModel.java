@@ -40,7 +40,8 @@ public abstract class DFAModel extends Observable {
     protected abstract int numState();
 
     /**
-     * Genera il DFA. Richiama il metodo <code>initializeDFA</code> ed esegue il suo contenuto
+     * Genera il DFA. Richiama il metodo <code>initializeDFA</code> ed esegue il
+     * suo contenuto
      */
     private void generateDFA() {
         dfa = new DFA(numState());
@@ -48,7 +49,8 @@ public abstract class DFAModel extends Observable {
     }
 
     /**
-     * Genera il DFA. Richiama il metodo <code>initializeDFA</code> ed esegue il suo contenuto
+     * Genera il DFA. Richiama il metodo <code>initializeDFA</code> ed esegue il
+     * suo contenuto
      */
     private void generateDFA(Integer numState) {
         dfa = new DFA(numState);
@@ -135,11 +137,32 @@ public abstract class DFAModel extends Observable {
      * Stampa il dot del DFA. l'output URL è definito in config.properties
      *
      * @param name node nel grafo
-     * @return 
+     * @return
      *
      */
     public String toDot(String name) {
         return dfa.toDOT(name);
+    }
+
+    /**
+     * Crea un file con il Dot generato. lo salva nella output dir indicata dal
+     * file di configurazione
+     *
+     * @param name nome del file
+     */
+    public void writeToDot(String name) {
+        dfa.writeToDot(name);
+    }
+
+    /**
+     * Crea un file con il Dot generato. lo salva nella output dir indicata dal
+     * file di configurazione
+     *
+     * @param name nome del file
+     * @param OutputDir cartella in cui sarà creato
+     */
+    public void writeToDot(String name, String OutputDir) {
+        dfa.writeToDot(name, OutputDir);
     }
 
     /**
@@ -167,10 +190,30 @@ public abstract class DFAModel extends Observable {
      * Stampa a video il codice del dfa
      *
      * @param s nome della classe java
-     * @return 
+     * @return
      */
     public String toJava(String s) {
         return dfa.toJava(s);
+    }
+
+    /**
+     * Genera il file Java che accetta il linguaggio del dfa (con metodo scan).
+     * viene salvato nella directory indicata nel file di configurazione
+     *
+     * @param name nome del file
+     */
+    public void writeToJava(String name) {
+        dfa.writeToJava(name);
+    }
+
+    /**
+     * Genera il file Java che accetta il linguaggio del dfa (con metodo scan).
+     *
+     * @param name nome del file
+     * @param OutputDir directory in cui sarà
+     */
+    public void writeToJava(String name, String OutputDir) {
+        dfa.writeToJava(name, OutputDir);
     }
 
     /**

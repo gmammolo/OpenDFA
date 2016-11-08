@@ -124,7 +124,7 @@ public class Move {
     /**
      * Aggiunge caratteri all' arco.
      *
-     * @param ch
+     * @param c carattere da aggiungere
      */
     public void addAlphabet(char c) {
         if (!this.alphabet.contains(c)) {
@@ -136,7 +136,7 @@ public class Move {
     /**
      * Aggiunge caratteri all' arco.
      *
-     * @param ch
+     * @param ch caratteri da aggiungere
      */
     public void addAlphabet(char[] ch) {
         for (char c : ch) {
@@ -150,7 +150,7 @@ public class Move {
     /**
      * Aggiunge caratteri all' arco.
      *
-     * @param ch
+     * @param ch caratteri da aggiungere
      */
     public void addAlphabet(ArrayList<Character> ch) {
         for (char c : ch) {

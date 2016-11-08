@@ -282,7 +282,7 @@ public class DFA {
      * stato faccia parte dell' automa deve esserci almeno una transizione che
      * parte o arriva a quello stato.
      *
-     * @return
+     * @return .
      */
     public HashSet<Integer> getAllState() {
         HashSet<Integer> result = new HashSet<>();
@@ -352,7 +352,7 @@ public class DFA {
      * <a href="http://www.graphviz.org">GraphViz</a>.
      *
      * @param name Nome dell'automa.
-     * @return
+     * @return .
      */
     public String toDOT(String name) {
 // DA IMPLEMENTARE 2.5
@@ -379,7 +379,7 @@ public class DFA {
      * Genera un' immagine png dell' automa a stati finiti. Per il corretto
      * funzionamento richiede che sia installato e configurato graphviz
      *
-     * @param Name
+     * @param Name Nome dell'automa.
      * @return posizione dove è stata salvata l'immagine
      */
     public String toPNG(String Name) {
@@ -390,7 +390,7 @@ public class DFA {
      * Genera un' immagine png dell' automa a stati finiti. Per il corretto
      * funzionamento richiede che sia installato e configurato graphviz
      *
-     * @param Name
+     * @param Name Nome dell'automa.
      * @param OutputDir percorso dove sarà salvata
      * @return posizione dove è stata salvata l'immagine
      */
@@ -414,7 +414,7 @@ public class DFA {
      * Genera un' immagine png dell' automa a stati finiti. Per il corretto
      * funzionamento richiede che sia installato e configurato graphviz
      *
-     * @param Name
+     * @param Name Nome dell'automa.
      * @param file file di destinazione: se esiste sarà sostituita dall'
      * immagine
      * @return posizione dove è stata salvata l'immagine
@@ -454,7 +454,7 @@ public class DFA {
      * l'automa.
      *
      * @param name Nome della classe da generare.
-     * @return
+     * @return il codice generato.
      */
     public String toJava(String name) {
         String s = "public class " + name + " {\n"
@@ -533,8 +533,8 @@ public class DFA {
     /**
      * PROBLEMI DI RAGGIUNGIBILITA'.
      *
-     * @param state
-     * @return
+     * @param state stato di partenza
+     * @return la lista degli stati raggiungibili
      */
     protected HashSet<Integer> _reach(Integer state) {
         if (!isValidState(state)) {
@@ -731,8 +731,8 @@ public class DFA {
      * stesso linguaggio, ovvero se i loro minimi hanno lo stesso numero di
      * stati e le stesse transizioni.
      *
-     * @param dfa
-     * @return
+     * @param dfa dfa da confrontare
+     * @return true se equivalenti, false altrimenti
      */
     public boolean equivalentTo(DFA dfa) {
         DFA minimize = this.minimize();
@@ -761,8 +761,7 @@ public class DFA {
     }
 
     /**
-     * Metodo Ausiliario di equivalentTo. verifica se le transizioni sono
-     * uguali
+     * Metodo Ausiliario di equivalentTo. verifica se le transizioni sono uguali
      *
      * @param a
      * @param b
@@ -782,16 +781,18 @@ public class DFA {
 
     /**
      * Restituisce la lista degli stati finali.
-     * @return 
+     *
+     * @return .
      */
     public Integer[] getFinalState() {
         return _finalStates.toArray(new Integer[0]);
     }
 
     /**
-     * Restituisce la lista delle transizioni formattate in una stringa, in un modo gradevole 
-     * alla vista. Utilizzato dall' interfaccia grafica.
-     * @return 
+     * Restituisce la lista delle transizioni formattate in una stringa, in un
+     * modo gradevole alla vista. Utilizzato dall' interfaccia grafica.
+     *
+     * @return .
      */
     public ArrayList<String> getEdgeStringify() {
         ArrayList<Move> moves = this._orderByInitialState();
@@ -803,9 +804,10 @@ public class DFA {
     }
 
     /**
-     * Restituisce la lista delle transizioni.  Il formato è di sola lettura e serve per visualizzare
-     * i dati nel modo più comodo possibile.
-     * @return 
+     * Restituisce la lista delle transizioni. Il formato è di sola lettura e
+     * serve per visualizzare i dati nel modo più comodo possibile.
+     *
+     * @return .
      */
     public ArrayList<Edge> getEdges() {
         ArrayList<Move> moves = this._orderByInitialState();
@@ -818,10 +820,11 @@ public class DFA {
 
     /**
      * Metodo ausiliario per la GUI. restituisce il move nella posizione passata
-     * per permetterne la modifica
+     * per permetterne la modifica. La posizione si riferisce alla lista delle
+     * transizioni ordinata in quanto utilizzato per la GUI.
      *
-     * @param index
-     * @return
+     * @param index posizione della transazione
+     * @return transazione in modalità lettura-
      */
     public Edge getEdgeAt(int index) {
         ArrayList<Move> moves = this._orderByInitialState();
@@ -833,10 +836,11 @@ public class DFA {
     }
 
     /**
-     * Permette la rimozione di lettere dell' alfabeto dalla transizione.
-     * Se non rimangono caratteri nella transizione, allora viene rimossa.
-     * @param start
-     * @param alphabet 
+     * Permette la rimozione di lettere dell' alfabeto dalla transizione. Se non
+     * rimangono caratteri nella transizione, allora viene rimossa.
+     *
+     * @param start stato iniziale
+     * @param alphabet caratteri della transazione
      */
     public void remove(Integer start, ArrayList<Character> alphabet) {
         Move remove = null;
@@ -859,13 +863,55 @@ public class DFA {
     }
 
     /**
-     * Metodo ausiliario per la GUI. stampa l'immagine nella cartella temporanea e che poi sarà quindi
-     * visualizzata nella GUI
+     * Metodo ausiliario per la GUI. stampa l'immagine nella cartella temporanea
+     * e che poi sarà quindi visualizzata nella GUI
+     *
      * @param name
-     * @return 
+     * @return posizione dell' immagine
      */
     public String toPNGTemp(String name) {
         return this.toPNG(name, TEMP_DIR);
+    }
+
+    /**
+     * Crea un file con il Dot generato. lo salva nella output dir indicata dal
+     * file di configurazione
+     *
+     * @param name nome del file
+     */
+    public void writeToDot(String name) {
+        writeToDot(name, OUTPUT_DIR);
+    }
+
+    /**
+     * Crea un file con il Dot generato. lo salva nella output dir indicata dal
+     * file di configurazione
+     *
+     * @param name nome del file
+     * @param OutputDir cartella in cui sarà creato
+     */
+    public void writeToDot(String name, String OutputDir) {
+        _writeToFile(OutputDir + name + ".dot", toDOT(name));
+    }
+
+    /**
+     * Genera il file Java che accetta il linguaggio del dfa (con metodo scan).
+     * viene salvato nella directory indicata nel file di configurazione
+     *
+     * @param name nome del file
+     */
+    public void writeToJava(String name) {
+        writeToJava(name, OUTPUT_DIR);
+    }
+
+    /**
+     * Genera il file Java che accetta il linguaggio del dfa (con metodo scan).
+     *
+     * @param name nome del file
+     * @param OutputDir directory in cui sarà salvato
+     */
+    public void writeToJava(String name, String OutputDir) {
+        _writeToFile(OutputDir + name + ".java", toJava(name));
     }
 
 }
