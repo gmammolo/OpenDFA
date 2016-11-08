@@ -41,7 +41,7 @@ public class DFA {
     };
 
     /**
-     * The dir. where temporary files will be created.
+     * The dir. where final files will be created.
      */
     private static final String OUTPUT_DIR = CONFIG_FILE.getProperty("outputDir");
 
@@ -86,6 +86,11 @@ public class DFA {
         }
     }
 
+    /**
+     * get image size (dpi).
+     *
+     * @return image size
+     */
     public int getImageDpi() {
         return this._dpiSizes[this._currentDpiPos];
     }
@@ -272,6 +277,13 @@ public class DFA {
         return _numberOfStates;
     }
 
+    /**
+     * Restituisce una lista con tutti gli stati dell' automa. Affinchè uno
+     * stato faccia parte dell' automa deve esserci almeno una transizione che
+     * parte o arriva a quello stato.
+     *
+     * @return
+     */
     public HashSet<Integer> getAllState() {
         HashSet<Integer> result = new HashSet<>();
         for (Entry<Move, Integer> entry : _transitions.entrySet()) {
@@ -343,18 +355,6 @@ public class DFA {
      * @return
      */
     public String toDOT(String name) {
-        return this.toDOT(name, OUTPUT_DIR);
-    }
-
-    /**
-     * Stampa una rappresentazione testuale dell'automa da visualizzare con
-     * <a href="http://www.graphviz.org">GraphViz</a>.
-     *
-     * @param name Nome dell'automa.
-     * @param OutputDir
-     * @return
-     */
-    public String toDOT(String name, String OutputDir) {
 // DA IMPLEMENTARE 2.5
         String out = "digraph " + name + "{\n";
         out += "rankdir=LR;\n";
@@ -373,27 +373,30 @@ public class DFA {
         }
         out += "}";
         return out;
-        //this._writeToFile(OutputDir + name + ".dot", out);
     }
 
     /**
+     * Genera un' immagine png dell' automa a stati finiti. Per il corretto
+     * funzionamento richiede che sia installato e configurato graphviz
      *
      * @param Name
-     * @return URL
+     * @return posizione dove è stata salvata l'immagine
      */
     public String toPNG(String Name) {
         return this.toPNG(Name, OUTPUT_DIR);
     }
 
     /**
+     * Genera un' immagine png dell' automa a stati finiti. Per il corretto
+     * funzionamento richiede che sia installato e configurato graphviz
      *
      * @param Name
-     * @param OutputDir
-     * @return URL
+     * @param OutputDir percorso dove sarà salvata
+     * @return posizione dove è stata salvata l'immagine
      */
     public String toPNG(String Name, String OutputDir) {
         try {
-            String toDOT = this.toDOT(Name, TEMP_DIR);
+            String toDOT = this.toDOT(Name);
             String dotFIleUrl = TEMP_DIR + Name + ".dot";
             _writeToFile(dotFIleUrl, toDOT);
             Runtime rt = Runtime.getRuntime();
@@ -407,9 +410,18 @@ public class DFA {
         return "";
     }
 
+    /**
+     * Genera un' immagine png dell' automa a stati finiti. Per il corretto
+     * funzionamento richiede che sia installato e configurato graphviz
+     *
+     * @param Name
+     * @param file file di destinazione: se esiste sarà sostituita dall'
+     * immagine
+     * @return posizione dove è stata salvata l'immagine
+     */
     public String toPNG(String Name, File file) {
         try {
-            String toDOT = this.toDOT(Name, TEMP_DIR);
+            String toDOT = this.toDOT(Name);
             String dotFIleUrl = TEMP_DIR + Name + ".dot";
             _writeToFile(dotFIleUrl, toDOT);
             Runtime rt = Runtime.getRuntime();
@@ -423,6 +435,12 @@ public class DFA {
         return "";
     }
 
+    /**
+     * Copia una stringa in un file. (per creare i file kava e dot)
+     *
+     * @param filename
+     * @param context
+     */
     private void _writeToFile(String filename, String context) {
         try (PrintWriter out = new PrintWriter(filename)) {
             out.println(context);
@@ -439,18 +457,6 @@ public class DFA {
      * @return
      */
     public String toJava(String name) {
-        return this.toJava(name, OUTPUT_DIR);
-    }
-
-    /**
-     * Stampa una classe Java con un metodo <code>scan</code> che implementa
-     * l'automa.
-     *
-     * @param name Nome della classe da generare.
-     * @param OutputDir
-     * @return
-     */
-    public String toJava(String name, String OutputDir) {
         String s = "public class " + name + " {\n"
                 + "\tpublic static boolean scan(String s)\n"
                 + "\t{\n";
@@ -498,7 +504,7 @@ public class DFA {
             }
             s += ";\n\t\t}\n";
         } else {
-            s += "\t\t return " + ( (isFinalState(0) ) ? "true" : "false") +" && s.length() ==0;\n \t} \n";
+            s += "\t\t return " + ((isFinalState(0)) ? "true" : "false") + " && s.length() ==0;\n \t} \n";
         }
         s += "\tpublic static void main(String[] args)\n"
                 + "\t{\n"
@@ -511,7 +517,8 @@ public class DFA {
     }
 
     /**
-     * Riordina le Mosse per stato iniziale
+     * Riordina le Mosse per stato iniziale. metodo utilizzato dalla parte
+     * grafica per dare una visualizzazione più ordinata
      *
      * @return La lista delle mosse ordinate
      */
@@ -524,9 +531,8 @@ public class DFA {
     }
 
     /**
-     * ************PROBLEMI DI RAGGIUNGIBILITA'
+     * PROBLEMI DI RAGGIUNGIBILITA'.
      *
-     *****************
      * @param state
      * @return
      */
@@ -576,8 +582,9 @@ public class DFA {
     }
 
     /**
+     * Restituisce gli stati pozzo.
      *
-     * @return
+     * @return gli stati pozzo
      */
     public HashSet<Integer> sink() {
         HashSet<Integer> result = new HashSet<>();
@@ -638,6 +645,11 @@ public class DFA {
 
     }
 
+    /**
+     * Minimizza il DFA. Genera il dfa minimo dell' attuale DFA
+     *
+     * @return
+     */
     public DFA minimize() {
 
         //1-2
@@ -714,12 +726,28 @@ public class DFA {
         return B;
     }
 
+    /**
+     * Confronta il dfa con un'altro. Due DFA sono equivalenti se accettano lo
+     * stesso linguaggio, ovvero se i loro minimi hanno lo stesso numero di
+     * stati e le stesse transizioni.
+     *
+     * @param dfa
+     * @return
+     */
     public boolean equivalentTo(DFA dfa) {
         DFA minimize = this.minimize();
         DFA minimize2 = dfa.minimize();
         return (minimize._numberOfStates == minimize2._numberOfStates && _checkFinalStatesEquals(minimize._finalStates, minimize2._finalStates) && _checkTransitionsEquals(minimize._transitions, minimize2._transitions));
     }
 
+    /**
+     * Metodo Ausiliario di equivalentTo. verifica se gli stati finali sono
+     * uguali
+     *
+     * @param a
+     * @param b
+     * @return
+     */
     private boolean _checkFinalStatesEquals(HashSet<Integer> a, HashSet<Integer> b) {
         if (a.size() != b.size()) {
             return false;
@@ -732,6 +760,14 @@ public class DFA {
         return true;
     }
 
+    /**
+     * Metodo Ausiliario di equivalentTo. verifica se le transizioni sono
+     * uguali
+     *
+     * @param a
+     * @param b
+     * @return
+     */
     private boolean _checkTransitionsEquals(HashMap<Move, Integer> a, HashMap<Move, Integer> b) {
         if (a.size() != b.size()) {
             return false;
@@ -744,10 +780,19 @@ public class DFA {
         return true;
     }
 
+    /**
+     * Restituisce la lista degli stati finali.
+     * @return 
+     */
     public Integer[] getFinalState() {
         return _finalStates.toArray(new Integer[0]);
     }
 
+    /**
+     * Restituisce la lista delle transizioni formattate in una stringa, in un modo gradevole 
+     * alla vista. Utilizzato dall' interfaccia grafica.
+     * @return 
+     */
     public ArrayList<String> getEdgeStringify() {
         ArrayList<Move> moves = this._orderByInitialState();
         ArrayList<String> result = new ArrayList<>();
@@ -757,6 +802,11 @@ public class DFA {
         return result;
     }
 
+    /**
+     * Restituisce la lista delle transizioni.  Il formato è di sola lettura e serve per visualizzare
+     * i dati nel modo più comodo possibile.
+     * @return 
+     */
     public ArrayList<Edge> getEdges() {
         ArrayList<Move> moves = this._orderByInitialState();
         ArrayList<Edge> result = new ArrayList<>();
@@ -767,7 +817,7 @@ public class DFA {
     }
 
     /**
-     * Metodo ausiliario per la GUI: restituisce il move nella posizione passata
+     * Metodo ausiliario per la GUI. restituisce il move nella posizione passata
      * per permetterne la modifica
      *
      * @param index
@@ -782,6 +832,12 @@ public class DFA {
         return null;
     }
 
+    /**
+     * Permette la rimozione di lettere dell' alfabeto dalla transizione.
+     * Se non rimangono caratteri nella transizione, allora viene rimossa.
+     * @param start
+     * @param alphabet 
+     */
     public void remove(Integer start, ArrayList<Character> alphabet) {
         Move remove = null;
         ArrayList<Character> newList = new ArrayList<>();
@@ -802,6 +858,12 @@ public class DFA {
         }
     }
 
+    /**
+     * Metodo ausiliario per la GUI. stampa l'immagine nella cartella temporanea e che poi sarà quindi
+     * visualizzata nella GUI
+     * @param name
+     * @return 
+     */
     public String toPNGTemp(String name) {
         return this.toPNG(name, TEMP_DIR);
     }

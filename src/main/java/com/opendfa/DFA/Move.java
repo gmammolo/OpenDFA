@@ -1,7 +1,6 @@
 package main.java.com.opendfa.DFA;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -123,7 +122,7 @@ public class Move {
     }
 
     /**
-     * Aggiunge caratteri all' arco
+     * Aggiunge caratteri all' arco.
      *
      * @param ch
      */
@@ -135,7 +134,7 @@ public class Move {
     }
 
     /**
-     * Aggiunge caratteri all' arco
+     * Aggiunge caratteri all' arco.
      *
      * @param ch
      */
@@ -149,7 +148,7 @@ public class Move {
     }
 
     /**
-     * Aggiunge caratteri all' arco
+     * Aggiunge caratteri all' arco.
      *
      * @param ch
      */
@@ -163,7 +162,7 @@ public class Move {
     }
 
     /**
-     * genera il label da visualizzare in modo stringato
+     * genera il label da visualizzare in modo stringato.
      */
     private void _regenerateLabel() {
         label = "";

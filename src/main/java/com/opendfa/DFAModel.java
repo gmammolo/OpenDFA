@@ -28,7 +28,7 @@ public abstract class DFAModel extends Observable {
     }
 
     /**
-     * Inizializza un DFA: in questo metodo andranno messi i setMove e
+     * Inizializza un DFA. in questo metodo andranno messi i setMove e
      * addFinalState
      */
     protected abstract void initializeDFA();
@@ -40,7 +40,7 @@ public abstract class DFAModel extends Observable {
     protected abstract int numState();
 
     /**
-     * Genera il DFA
+     * Genera il DFA. Richiama il metodo <code>initializeDFA</code> ed esegue il suo contenuto
      */
     private void generateDFA() {
         dfa = new DFA(numState());
@@ -48,7 +48,7 @@ public abstract class DFAModel extends Observable {
     }
 
     /**
-     * Genera il DFA
+     * Genera il DFA. Richiama il metodo <code>initializeDFA</code> ed esegue il suo contenuto
      */
     private void generateDFA(Integer numState) {
         dfa = new DFA(numState);
@@ -143,17 +143,6 @@ public abstract class DFAModel extends Observable {
     }
 
     /**
-     * Stampa il dot del DFA.
-     *
-     * @param name node nel grafo
-     * @param outputDir URL della directory di output
-     * @return 
-     */
-    public String toDot(String name, String outputDir) {
-        return dfa.toDOT(name, outputDir);
-    }
-
-    /**
      * Genera il png del DFA (Richiede GraphViz installato).
      *
      * @param name node nel grafo
@@ -182,18 +171,6 @@ public abstract class DFAModel extends Observable {
      */
     public String toJava(String s) {
         return dfa.toJava(s);
-    }
-
-    /**
-     * Stampa a video il codice del dfa
-     *
-     * @param s nome della classe java
-     * @param outputDir URL della directory di output
-     * @return 
-     *
-     */
-    public String toJava(String s, String outputDir) {
-        return dfa.toJava(s, outputDir);
     }
 
     /**
