@@ -226,5 +226,12 @@ public abstract class DFAModel extends Observable {
     public boolean scan(String line) {
         return dfa.scan(line);
     }
+    
+    /**
+     * Minimizza il dfa 
+     */
+    public void minimize() {
+        this.dfa =  dfa.minimize();
+    }
 
 }
