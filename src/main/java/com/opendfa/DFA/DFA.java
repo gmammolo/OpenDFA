@@ -249,11 +249,27 @@ public class DFA {
      *
      * @param p Lo stato da controllare.
      * @return <code>true</code> se lo stato e` valido, <code>false</code>
-     * altrimenti.
+     * altrimenti. NOTA: lo stato errore (-1) viene considerato di default
+     * validom
      * @see #_numberOfStates
      */
     public boolean isValidState(int p) {
-        return (p >= -1 && p < _numberOfStates);
+        return isValidState(p, true);
+    }
+
+    /**
+     * Determina se uno stato e` valido oppure no.
+     *
+     * @param p Lo stato da controllare.
+     * @param errorState insica se lo stato errore (-1) è da considerarsi valido
+     * o meno
+     * @return <code>true</code> se lo stato e` valido, <code>false</code>
+     * altrimenti.
+     * @see #_numberOfStates
+     */
+    public boolean isValidState(int p, boolean errorState) {
+        int firstState = (errorState) ? -1 : 0;
+        return (p >= firstState && p < _numberOfStates);
     }
 
     /**
@@ -661,30 +677,31 @@ public class DFA {
         }
 
         //3
-        boolean check = true;
-        while (check) {
+        boolean check;
+        do {
             check = false;
             for (int i = 0; i < _numberOfStates; i++) {
                 for (int j = 0; j < _numberOfStates; j++) {
                     if (eq[i][j]) {
                         for (Entry<Move, Integer> entry : _transitions.entrySet()) {
                             Move key = entry.getKey();
-                            for (Character c : key.alphabet) {
-                                if (isValidState(move(i, c))
-                                        && isValidState(move(j, c))
-                                        && move(i, c) >= 0
-                                        && move(j, c) >= 0
-                                        && !eq[move(i, c)][move(j, c)]) {
-                                    check = true;
-                                    eq[i][j] = false;
+                            if (key.start == i || key.start == j) {
+                                for (Character c : key.alphabet) {
+                                    if (isValidState(move(i, c), false)
+                                            && isValidState(move(j, c), false)
+                                            && move(i, c) >= 0
+                                            && move(j, c) >= 0
+                                            && !eq[move(i, c)][move(j, c)]) {
+                                        check = true;
+                                        eq[i][j] = false;
+                                    }
                                 }
                             }
-
                         }
                     }
                 }
             }
-        }
+        } while (check);
 
         //5
         Integer[] m = new Integer[_numberOfStates];
