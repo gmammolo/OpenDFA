@@ -8,7 +8,6 @@ dist/
 nbdist/
 nbactions.xml
 nb-configuration.xml
-nbproject/
 
 Temp/*.dot
 Temp/*.png
