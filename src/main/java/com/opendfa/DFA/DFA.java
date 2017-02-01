@@ -29,6 +29,9 @@ public class DFA {
      * Load the config.properties file.
      */
     private final static String CFG_PROP = "/home/terasud/NetBeansProjects/OpenDFA/config/config.properties";
+    
+    
+    
     private final static Properties CONFIG_FILE = new Properties() {
         private final static long serialVersionUID = 1L;
 
@@ -55,6 +58,8 @@ public class DFA {
      */
     private static final String DOT = CONFIG_FILE.getProperty("dotFor" + OS_NAME);
 
+    private static final String PACKAGE = CONFIG_FILE.getProperty("package");
+    
     /**
      * The image size in dpi. 96 dpi is normal size. Higher values are 10%
      * higher each. Lower values 10% lower each.
@@ -473,7 +478,7 @@ public class DFA {
      * @return il codice generato.
      */
     public String toJava(String name) {
-        String s = "public class " + name + " {\n"
+        String s =PACKAGE+"\n public class " + name + " {\n"
                 + "\tpublic static boolean scan(String s)\n"
                 + "\t{\n";
         ArrayList<Move> entries = _orderByInitialState();
